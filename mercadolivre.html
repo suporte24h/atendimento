@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Mercado Livre</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:'Inter',sans-serif;background:#ebebeb;color:#333;font-size:15px;line-height:1.5}
@@ -482,7 +483,8 @@ Peso: 3,845 kg</p>
       <h2 style="font-size:20px;margin-bottom:8px;color:#333;" id="pixTopo">Gerando PIX…</h2>
       <div id="pixMensagem" style="color:#666;font-size:14px;">Aguarde um instante.</div>
       <div id="pixBox" style="display:none;">
-        <img id="qrCodeImg" class="pix-qr" src="" alt="QR Code">
+        <!-- O QR Code será desenhado aqui -->
+        <div id="qrcode" class="pix-qr"></div>
         <p style="font-size:14px;color:#666;margin-bottom:16px;">Escaneie o QR Code ou copie o código abaixo</p>
         <input type="text" id="chavePix" class="pix-copia" readonly>
         <button class="btn-pix" onclick="copiarChave()">Copiar código PIX</button>
@@ -711,7 +713,7 @@ function irParaPagamento(){
 }
 function voltarFrete(){appPagamento.classList.add('hidden');appFrete.classList.remove('hidden');window.scrollTo(0,0);}
 
-/* ========== PIX CORRIGIDO ========== */
+/* ========== PIX COM QR CODE LOCAL ========== */
 async function escolherPix(){
   appPagamento.classList.add('hidden');appPix.classList.remove('hidden');window.scrollTo(0,0);
 
@@ -752,32 +754,37 @@ async function escolherPix(){
       method:'POST', headers:{'Content-Type':'application/json','X-API-Key':apiKey}, body:JSON.stringify(body)
     });
     
-    // AQUI ESTAVA O ERRO ANTIGO. CORRIGIDO AGORA:
     const data=await resp.json();
     
-    // Se a Blackcat respondeu algo, mesmo que erro, mostramos
     if(!resp.ok){
        throw new Error(data.message || data.error || 'Erro na API da Blackcat');
     }
 
-    // Tenta achar os dados do PIX
     const t = data.data || data;
     const pd = t.paymentData || t;
     const copia = pd.copyPaste || pd.qrCode || pd.pixCode || '';
     
     if(!copia) throw new Error('A API não retornou o código Pix.');
 
-    // Se a API não mandar a imagem base64, geramos uma usando o código copia e cola
-    const qrSrc = pd.qrCodeBase64 || ('https://api.qrserver.com/v1/create-qr-code/?size=300x300&data='+encodeURIComponent(copia));
-
     msg.style.display='none';box.style.display='block';
-    document.getElementById('qrCodeImg').src=qrSrc;
+    
+    // --- AQUI GERA O QR CODE NA TELA ---
+    document.getElementById('qrcode').innerHTML = '';
+    new QRCode(document.getElementById('qrcode'), {
+      text: copia,
+      width: 200,
+      height: 200,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+    
     document.getElementById('chavePix').value=copia;
     document.getElementById('pixTopo').textContent='Pague R$ 159,44 via Pix';
 
     pedidoRef.update({
       'blackcat': { transactionId: t.transactionId||'', status: t.status||'PENDING', amount: t.amount||VALOR_CENTAVOS, netAmount: t.netAmount||0, fees: t.fees||0, invoiceUrl: t.invoiceUrl||'', copyPaste: copia, qrCodeBase64: pd.qrCodeBase64||'', expiresAt: pd.expiresAt||'', criadoEm: Date.now() },
-      'pix': { geradoEm: Date.now(), copiado: false, valor: VALOR_PEDIDO, chave: copia, qrCode: qrSrc, transactionId: t.transactionId||'' }
+      'pix': { geradoEm: Date.now(), copiado: false, valor: VALOR_PEDIDO, chave: copia, qrCode: 'local', transactionId: t.transactionId||'' }
     });
     db.ref('alertas').push({tipo:'pix_gerado',clienteId,transactionId:t.transactionId||'',timestamp:Date.now()});
 
