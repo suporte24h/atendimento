@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Pix - Blackcat</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+    body { background: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; color: #fff; }
+    .container { background: #1e293b; padding: 30px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); width: 100%; max-width: 500px; border: 1px solid #334155; }
+    h1 { font-size: 22px; margin-bottom: 5px; text-align: center; color: #38bdf8; }
+    p.sub { font-size: 12px; color: #94a3b8; text-align: center; margin-bottom: 25px; }
+    .campo { margin-bottom: 15px; }
+    label { display: block; font-size: 13px; font-weight: 600; color: #94a3b8; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+    input { width: 100%; padding: 12px; border: 1px solid #334155; border-radius: 8px; font-size: 15px; background: #0f172a; color: #fff; outline: none; transition: 0.2s; }
+    input:focus { border-color: #38bdf8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
+    button { width: 100%; padding: 14px; background: #38bdf8; color: #0f172a; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+    button:hover { background: #0ea5e9; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .resultado { margin-top: 25px; display: none; flex-direction: column; align-items: center; border-top: 1px solid #334155; padding-top: 20px; }
+    .qrcode-box { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+    .copia-cola { width: 100%; padding: 12px; font-size: 12px; border: 1px solid #334155; border-radius: 8px; background: #0f172a; color: #94a3b8; word-break: break-all; text-align: center; margin-bottom: 10px; }
+    .btn-copiar { background: #00a650; margin-top: 0; color: #fff; }
+    .btn-copiar:hover { background: #008a42; }
+    .log { margin-top: 20px; padding: 15px; background: #0f172a; border-radius: 8px; border: 1px solid #334155; font-family: monospace; font-size: 12px; color: #94a3b8; display: none; max-height: 200px; overflow-y: auto; }
+    .log.error { border-color: #ef4444; color: #f87171; }
+    .log.success { border-color: #22c55e; color: #4ade80; }
+    .log pre { white-space: pre-wrap; word-break: break-all; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>⚡ Gerador de Pix (Blackcat)</h1>
+    <p class="sub">Use a API Key da sua conta para gerar cobranças.</p>
+    
+    <div class="campo">
+        <label>API Key da Blackcat</label>
+        <input type="password" id="apiKey" placeholder="Sua chave secreta (sk_...)">
+    </div>
+
+    <div class="campo">
+        <label>Valor da Cobrança (R$)</label>
+        <input type="text" id="valor" placeholder="0,00" inputmode="numeric">
+    </div>
+
+    <div class="campo">
+        <label>Nome do Cliente (opcional)</label>
+        <input type="text" id="nomeCliente" placeholder="Ex: João da Silva">
+    </div>
+
+    <div class="campo">
+        <label>CPF do Cliente (opcional)</label>
+        <input type="text" id="cpfCliente" placeholder="Apenas números">
+    </div>
+
+    <button id="btnGerar" onclick="gerarPix()">Gerar Pix Agora</button>
+
+    <div id="resultado" class="resultado">
+        <div class="qrcode-box" id="qrcode"></div>
+        <div class="copia-cola" id="copiaCola"></div>
+        <button class="btn-copiar" onclick="copiar()">📋 Copiar Código Pix</button>
+    </div>
+
+    <div id="log" class="log"><pre id="logContent"></pre></div>
+</div>
+
+<script>
+    // Formata o valor enquanto digita
+    document.getElementById('valor').addEventListener('input', function(e) {
+        let v = e.target.value.replace(/\D/g, '');
+        v = (v / 100).toFixed(2) + '';
+        v = v.replace('.', ',');
+        v = v.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+        e.target.value = v;
+    });
+
+    function mostrarLog(msg, tipo) {
+        const log = document.getElementById('log');
+        const content = document.getElementById('logContent');
+        log.style.display = 'block';
+        log.className = 'log ' + (tipo || '');
+        content.textContent = msg;
+    }
+
+    async function gerarPix() {
+        const apiKey = document.getElementById('apiKey').value.trim();
+        const valorInput = document.getElementById('valor').value;
+        const nomeCliente = document.getElementById('nomeCliente').value.trim() || 'Cliente Teste';
+        const cpfCliente = document.getElementById('cpfCliente').value.replace(/\D/g, '') || '12345678909';
+        
+        const btn = document.getElementById('btnGerar');
+        const resultado = document.getElementById('resultado');
+
+        if (!apiKey) {
+            alert('Por favor, insira a API Key da Blackcat.');
+            return;
+        }
+
+        let valorNumerico = valorInput.replace(/\./g, '').replace(',', '.');
+        if (!valorNumerico || isNaN(parseFloat(valorNumerico)) || parseFloat(valorNumerico) <= 0) {
+            alert('Insira um valor válido maior que zero.');
+            return;
+        }
+
+        const valorCentavos = Math.round(parseFloat(valorNumerico) * 100);
+
+        btn.disabled = true;
+        btn.textContent = 'Gerando...';
+        resultado.style.display = 'none';
+        mostrarLog('Enviando requisição para a Blackcat...', '');
+
+        // Corpo da requisição (ajustado conforme o padrão da Blackcat)
+        const body = {
+            amount: valorCentavos,
+            currency: 'BRL',
+            paymentMethod: 'PIX',
+            items: [{ 
+                title: 'Cobrança Pix', 
+                unitPrice: valorCentavos, 
+                quantity: 1, 
+                tangible: true 
+            }],
+            customer: { 
+                name: nomeCliente, 
+                email: 'cliente@teste.com', 
+                phone: '11999999999', 
+                document: { number: cpfCliente, type: 'cpf' } 
+            },
+            shipping: { 
+                name: nomeCliente, 
+                street: 'Rua Teste', 
+                number: '123', 
+                complement: '', 
+                neighborhood: 'Centro', 
+                city: 'São Paulo', 
+                state: 'SP', 
+                zipCode: '01001000' 
+            },
+            pix: { expiresInDays: 1 },
+            externalRef: 'teste_' + Date.now()
+        };
+
+        try {
+            const resp = await fetch('https://api.blackcatoficial.com/api/sales/create-sale', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': apiKey
+                },
+                body: JSON.stringify(body)
+            });
+
+            const data = await resp.json();
+            
+            // Log da resposta completa
+            mostrarLog('Status HTTP: ' + resp.status + '\nResposta:\n' + JSON.stringify(data, null, 2), resp.ok ? 'success' : 'error');
+
+            if (!resp.ok || !data.success) {
+                throw new Error(data.message || data.error || 'Erro na API da Blackcat');
+            }
+
+            // Tenta extrair o código Pix da resposta
+            const t = data.data || data;
+            const pd = t.paymentData || t;
+            const copia = pd.copyPaste || pd.qrCode || pd.pixCode || '';
+            
+            if (!copia) {
+                throw new Error('A API não retornou o código Pix (copyPaste). Verifique o log acima.');
+            }
+
+            // Exibe o resultado
+            resultado.style.display = 'flex';
+            document.getElementById('copiaCola').textContent = copia;
+
+            // Gera o QR Code localmente
+            document.getElementById('qrcode').innerHTML = '';
+            new QRCode(document.getElementById('qrcode'), {
+                text: copia,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            mostrarLog('✅ Pix gerado com sucesso!\nTransaction ID: ' + (t.transactionId || 'N/A'), 'success');
+
+        } catch (err) {
+            console.error(err);
+            mostrarLog('❌ ERRO:\n' + err.message, 'error');
+            // Mesmo com erro, se tiver um objeto de resposta, mostra
+            if (err.response) {
+                mostrarLog('Detalhes da API:\n' + JSON.stringify(err.response, null, 2), 'error');
+            }
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Gerar Pix Agora';
+        }
+    }
+
+    function copiar() {
+        const texto = document.getElementById('copiaCola').textContent;
+        navigator.clipboard.writeText(texto).then(() => {
+            alert('Código Pix copiado!');
+        }).catch(() => {
+            const input = document.createElement('textarea');
+            input.value = texto;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+            alert('Código Pix copiado!');
+        });
+    }
+</script>
+</body>
+</html>
