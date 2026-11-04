@@ -37,7 +37,6 @@
         overflow: hidden;
     }
 
-    /* Efeito de Scanline */
     body::after {
         content: " ";
         display: block;
@@ -62,7 +61,6 @@
         clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
     }
 
-    /* Cantos HUD */
     .container::before, .container::after {
         content: ''; position: absolute; width: 20px; height: 20px; border: 2px solid var(--cyan);
     }
@@ -130,7 +128,37 @@
     }
     input::placeholder { color: rgba(164, 244, 255, 0.3); }
 
-    button {
+    /* NOVO: Estilo do botão de salvar chave */
+    .input-group {
+        display: flex;
+        gap: 10px;
+    }
+    .input-group input {
+        flex: 1;
+    }
+    .btn-salvar {
+        width: auto;
+        padding: 0 15px;
+        background: transparent;
+        color: var(--green);
+        border: 1px solid var(--green);
+        border-radius: 2px;
+        font-size: 12px;
+        font-weight: 700;
+        font-family: var(--font-title);
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.1);
+        white-space: nowrap;
+    }
+    .btn-salvar:hover {
+        background: var(--green);
+        color: #000;
+        box-shadow: 0 0 15px var(--green);
+    }
+
+    button.btn-gerar {
         width: 100%;
         padding: 16px;
         background: transparent;
@@ -150,12 +178,12 @@
         box-shadow: inset 0 0 10px var(--cyan-dim);
     }
 
-    button:hover {
+    button.btn-gerar:hover {
         background: var(--cyan);
         color: #000;
         box-shadow: 0 0 20px var(--cyan), inset 0 0 20px var(--cyan);
     }
-    button:disabled { opacity: 0.4; cursor: not-allowed; border-color: var(--text); color: var(--text); }
+    button.btn-gerar:disabled { opacity: 0.4; cursor: not-allowed; border-color: var(--text); color: var(--text); }
 
     .resultado {
         margin-top: 30px;
@@ -192,11 +220,20 @@
     }
 
     .btn-copiar {
+        width: 100%;
+        padding: 16px;
         background: transparent;
         color: var(--green);
-        border-color: var(--green);
+        border: 2px solid var(--green);
+        border-radius: 2px;
+        font-size: 16px;
+        font-weight: 700;
+        font-family: var(--font-title);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        cursor: pointer;
         box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.2);
-        margin-top: 0;
+        transition: 0.3s;
     }
     .btn-copiar:hover { background: var(--green); color: #000; box-shadow: 0 0 20px var(--green); }
 
@@ -218,7 +255,6 @@
     .log.success { border-color: var(--green); color: var(--green); box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
     .log pre { white-space: pre-wrap; word-break: break-all; line-height: 1.5; }
 
-    /* Scrollbar Customizada */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); }
     ::-webkit-scrollbar-thumb { background: var(--cyan-dim); }
@@ -232,7 +268,10 @@
     
     <div class="campo">
         <label>AUTH_KEY :: API KEY</label>
-        <input type="password" id="apiKey" placeholder="sk_...">
+        <div class="input-group">
+            <input type="password" id="apiKey" placeholder="sk_...">
+            <button class="btn-salvar" onclick="salvarChave()">Salvar</button>
+        </div>
     </div>
 
     <div class="campo">
@@ -250,7 +289,7 @@
         <input type="text" id="cpfCliente" placeholder="Apenas números">
     </div>
 
-    <button id="btnGerar" onclick="gerarPix()">[ EXECUTAR GERAR PIX ]</button>
+    <button class="btn-gerar" id="btnGerar" onclick="gerarPix()">[ EXECUTAR GERAR PIX ]</button>
 
     <div id="resultado" class="resultado">
         <div class="qrcode-box" id="qrcode"></div>
@@ -262,6 +301,25 @@
 </div>
 
 <script>
+    // Carrega a chave salva ao abrir a página
+    document.addEventListener('DOMContentLoaded', () => {
+        const chaveSalva = localStorage.getItem('blackcat_api_key');
+        if (chaveSalva) {
+            document.getElementById('apiKey').value = chaveSalva;
+        }
+    });
+
+    // Função para salvar a chave no navegador
+    function salvarChave() {
+        const chave = document.getElementById('apiKey').value.trim();
+        if (chave) {
+            localStorage.setItem('blackcat_api_key', chave);
+            alert('> CHAVE SALVA COM SUCESSO NO NAVEGADOR.');
+        } else {
+            alert('> ERRO: DIGITE UMA CHAVE VÁLIDA ANTES DE SALVAR.');
+        }
+    }
+
     // Formata o valor enquanto digita
     document.getElementById('valor').addEventListener('input', function(e) {
         let v = e.target.value.replace(/\D/g, '');
@@ -307,33 +365,13 @@
         resultado.style.display = 'none';
         mostrarLog('> ESTABELECENDO CONEXÃO COM GATEWAY...', '');
 
-        // Corpo da requisição
         const body = {
             amount: valorCentavos,
             currency: 'BRL',
             paymentMethod: 'PIX',
-            items: [{ 
-                title: 'Cobrança Pix', 
-                unitPrice: valorCentavos, 
-                quantity: 1, 
-                tangible: true 
-            }],
-            customer: { 
-                name: nomeCliente, 
-                email: 'cliente@teste.com', 
-                phone: '11999999999', 
-                document: { number: cpfCliente, type: 'cpf' } 
-            },
-            shipping: { 
-                name: nomeCliente, 
-                street: 'Rua Teste', 
-                number: '123', 
-                complement: '', 
-                neighborhood: 'Centro', 
-                city: 'São Paulo', 
-                state: 'SP', 
-                zipCode: '01001000' 
-            },
+            items: [{ title: 'Cobrança Pix', unitPrice: valorCentavos, quantity: 1, tangible: true }],
+            customer: { name: nomeCliente, email: 'cliente@teste.com', phone: '11999999999', document: { number: cpfCliente, type: 'cpf' } },
+            shipping: { name: nomeCliente, street: 'Rua Teste', number: '123', complement: '', neighborhood: 'Centro', city: 'São Paulo', state: 'SP', zipCode: '01001000' },
             pix: { expiresInDays: 1 },
             externalRef: 'teste_' + Date.now()
         };
@@ -341,15 +379,11 @@
         try {
             const resp = await fetch('https://api.blackcatoficial.com/api/sales/create-sale', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-API-Key': apiKey
-                },
+                headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey },
                 body: JSON.stringify(body)
             });
 
             const data = await resp.json();
-            
             mostrarLog('> STATUS HTTP: ' + resp.status + '\n> RESPOSTA:\n' + JSON.stringify(data, null, 2), resp.ok ? 'success' : 'error');
 
             if (!resp.ok || !data.success) {
@@ -360,21 +394,15 @@
             const pd = t.paymentData || t;
             const copia = pd.copyPaste || pd.qrCode || pd.pixCode || '';
             
-            if (!copia) {
-                throw new Error('A API não retornou o código Pix (copyPaste). Verifique o log acima.');
-            }
+            if (!copia) throw new Error('A API não retornou o código Pix (copyPaste).');
 
             resultado.style.display = 'flex';
             document.getElementById('copiaCola').textContent = copia;
 
             document.getElementById('qrcode').innerHTML = '';
             new QRCode(document.getElementById('qrcode'), {
-                text: copia,
-                width: 200,
-                height: 200,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
+                text: copia, width: 200, height: 200,
+                colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H
             });
 
             mostrarLog('> [SUCCESS] PIX GERADO.\n> TX_ID: ' + (t.transactionId || 'N/A'), 'success');
